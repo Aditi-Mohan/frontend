@@ -4,7 +4,10 @@ class Settings extends Component {
     render() {
         return(
             <div>
-                <h1>Settings</h1>
+            <div style={{zIndex: '0', position: 'absolute'}}>
+                Settings
+            </div>
+            <div style={{color: 'red', position: 'absolute'}}>test</div>
             </div>
         )
     }

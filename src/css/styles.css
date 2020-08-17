@@ -9,6 +9,11 @@
     --speed: 500ms;
 }
 
+.header {
+    font-family: Cambria;
+    letter-spacing: 0.6em;
+}
+
 ul {
     list-style: none;
     margin: 0;
@@ -70,7 +75,6 @@ Link {
     width: 20px;
     height: 20px;
     transition: fill 300ms, width 300ms, height 300ms;
-    /* animation: svg-animation 300ms; */
 }
 
 .my-icon-button:hover svg {
@@ -79,8 +83,15 @@ Link {
     height: 27px;
 }
 
-@keyframes svg-animation {
-    /* implement stroke animation */
+.undo-button {
+    position: absolute;
+    z-index: 1;
+    left: 10px;
+    top: 89px;
+}
+
+.undo-button:hover {
+    box-shadow: rgb(111, 114, 124) 1px 1px 4px;
 }
 
 .dropdown {

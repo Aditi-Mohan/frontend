@@ -1,7 +1,7 @@
 import React, {useState, Children, isValidElement, cloneElement, Component } from 'react';
 import { Link } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
-import '../css/navbar.css';
+import '../css/styles.css';
 import { ReactStyledTooltip } from '../components/StyledTooltip';
 import { ReactComponent as MessengerIcon } from '../svgs/icons/messenger.svg';
 import { ReactComponent as CaretIcon } from '../svgs/icons/caret.svg';
