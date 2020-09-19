@@ -1,20 +1,9 @@
 import React, {Component} from 'react';
-import axios from "axios";
 
 class Todos extends Component {
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {
-    //         activeItem: this.props.activeItem,
-    //     };
-    //     console.log(this.props.activeItem.id);
-    //     console.log(this.props.activeItem.title);
-    //     console.log(this.props.activeItem.descripiton);
-    //     console.log(this.props.activeItem.completed);
-    // }
 
     refreshList() {
-        axios.get("/api/todos").then(res => console.log(res.data)).catch(err => console.log(err));
+        fetch("/api/confirmed/"+this.props.country).then(res => res.json()).then((res) => {console.log(res);}).catch(err => {console.log(err);})
     }
     componentDidMount() {
         this.refreshList();

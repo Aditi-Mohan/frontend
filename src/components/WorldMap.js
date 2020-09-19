@@ -20,10 +20,6 @@ class WorldMap extends Component {
         }
         this.ref = React.createRef();
         this.updateDimensions = this.updateDimensions.bind(this)
-        console.log(window.innerWidth)
-        console.log(this.state.width)
-        console.log(this.state.displayWidth)
-        console.log((this.state.width+this.state.displayWidth) - window.innerWidth)
     }
     
     componentDidMount() {
@@ -43,10 +39,6 @@ class WorldMap extends Component {
             height,
             displayWidth,
         })
-        console.log(window.innerWidth)
-        console.log(this.state.width)
-        console.log(this.state.displayWidth)
-        console.log((this.state.width+this.state.displayWidth) - window.innerWidth)
     }
 
     handleHover = (e) => {
@@ -95,6 +87,9 @@ class WorldMap extends Component {
             selected: e.target.id,
             viewBox: Math.round(min_x-6)+' '+Math.round(min_y-6)+' '+Math.round(max_x-min_x+12)+' '+Math.round(max_y-min_y+12),
         })
+        var country = e.target.getAttribute('title');
+        console.log(country);
+        fetch("/api/confirmed/"+country).then(res => res.json()).then((res) => {console.log(res);}).catch(err => {console.log(err);})
     }
 
     resetViewBox = (e) => {
@@ -127,7 +122,7 @@ class WorldMap extends Component {
         var content;
         if( this.state.selected !== null ) {
             if ( this.state.active === this.state.selected ) {
-         content = node.querySelector('#main').querySelector('#'+this.state.selected).getAttribute('title');
+                content = node.querySelector('#main').querySelector('#'+this.state.selected).getAttribute('title');
             }
             else if( this.state.active !== null ){
              content = node.querySelector('#main').querySelector('#'+this.state.active).getAttribute('title');
@@ -1434,6 +1429,7 @@ class WorldMap extends Component {
                 </svg>
         <ReactTooltip id='tooltip' type='dark' getContent={() => this.getData()}></ReactTooltip>
         <DisplayPanel width={this.state.displayWidth} />
+        {/* <Todo country={() => this.getData()}/> */}
             </div>
         )
     }

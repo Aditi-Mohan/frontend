@@ -4,7 +4,6 @@ import NavBar from './components/NavBar';
 import Settings from './components/Setting'
 import WorldMap from './components/WorldMap';
 
-
 function App() {
   return (
     <div className="App">
