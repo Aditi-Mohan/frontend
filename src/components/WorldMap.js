@@ -12,6 +12,7 @@ class WorldMap extends Component {
             displayWidth: window.innerWidth - (window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530) - 17 < 200? 200: window.innerWidth - (window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530) - 17,
             active: null,
             selected: null,
+            data: null,
             viewBox: '-50 -10 1156 670',
             hoverColor: '#58d1c3',
             normalColor: '#112e2b',
@@ -42,9 +43,11 @@ class WorldMap extends Component {
     }
 
     handleHover = (e) => {
-        this.setState({
-            active: e.target.id,
-        })
+        if( e.target.id !== this.state.active) {
+            this.setState({
+                active: e.target.id,
+            })
+        }
     }
 
     handleMouseLeave = (e) => {
@@ -83,19 +86,19 @@ class WorldMap extends Component {
                 max_y = next_point_y
             }
         }
+        var country = e.target.getAttribute('title');
         this.setState({
             selected: e.target.id,
+            data: country,
             viewBox: Math.round(min_x-6)+' '+Math.round(min_y-6)+' '+Math.round(max_x-min_x+12)+' '+Math.round(max_y-min_y+12),
         })
-        var country = e.target.getAttribute('title');
-        console.log(country);
-        fetch("/api/confirmed/"+country).then(res => res.json()).then((res) => {console.log(res);}).catch(err => {console.log(err);})
     }
 
     resetViewBox = (e) => {
         this.setState({
             viewBox: '-50 -10 1156 670',
             selected: null,
+            data: null,
         })
     }
 
@@ -1428,8 +1431,7 @@ class WorldMap extends Component {
                     </g>
                 </svg>
         <ReactTooltip id='tooltip' type='dark' getContent={() => this.getData()}></ReactTooltip>
-        <DisplayPanel width={this.state.displayWidth} />
-        {/* <Todo country={() => this.getData()}/> */}
+        <DisplayPanel width={this.state.displayWidth} data={this.state.data}/>
             </div>
         )
     }

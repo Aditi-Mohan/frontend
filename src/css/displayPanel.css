@@ -1,0 +1,21 @@
+.displayPanel {
+    background-color:  #242526;
+    color: #fae19b;
+    padding: 0.2rem;
+}
+.display-table span {
+    color: #dadce1;
+    padding: 0.3rem;
+    background-color: #484a4d;
+}
+.display-table label {
+    font-size: large;
+    font-weight: 700;
+}
+.display-table td {
+    padding: 0.2rem;
+}
+
+.display-table tr {
+    vertical-align: middle;
+}
