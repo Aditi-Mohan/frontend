@@ -28,7 +28,7 @@ class NavBar extends Component {
             titleWidth: 140.91,
             liWidth: 64,
             navItems: [
-                {id: 'contact', tooltipContent: 'Contact Us', icon: <MessengerIcon/>},
+                {id: 'contact', tooltipContent: 'Contact Me', icon: <MessengerIcon/>},
                 {id: 'news', tooltipContent: 'News', icon:<BoltIcon/>},
                 {id: 'stats', tooltipContent: 'Statistics', icon: <ChartIcon/>},
                 {id: 'settings', tooltipContent: 'Settings', icon: <CogIcon/>}
@@ -83,9 +83,9 @@ class NavBar extends Component {
                 <ReactStyledTooltip id='home' place='bottom' effect='solid'><div>Home</div></ReactStyledTooltip>
                 <ul className='right navbar-nav'>
                     {listOfNavItems}
-                    <NavItem id='quickAccess' tooltipContent='Quick Access' icon={<CaretIcon/>} >
+                    {this.state.navItems.length - this.state.numberOfNavItems !== 0 && <NavItem id='quickAccess' tooltipContent='Quick Access' icon={<CaretIcon/>} >
                         <Dropdown numberOfDropdownItems={ this.state.navItems.length - this.state.numberOfNavItems }/>
-                    </NavItem>
+                    </NavItem>}
                 </ul>
             </nav>
         )
@@ -180,7 +180,7 @@ function Dropdown({ closeMenu, numberOfDropdownItems }) {
             <CSSTransition in={activeMenu === 'main'} unmountOnExit timeout={500}
             classNames='menu-primary' onEnter={claclHeight}>
                 <div className='menu'>
-                    <DorpdownItem leftIcon={<UserIcon/>} goToMenu='profile'>My Profile</DorpdownItem>
+                    {/* <DorpdownItem leftIcon={<UserIcon/>} goToMenu='profile'>My Profile</DorpdownItem> */}
                     {getMainDropdown()}
                 </div>
             </CSSTransition>

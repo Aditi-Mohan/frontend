@@ -18,25 +18,17 @@ class DisplayPanel extends Component {
         }
         if( this.props.data !== null ) {
         if( prevProps.data !== this.props.data ) {
-            Promise.all([
-                fetch("http://127.0.0.1:8000/api/confirmed/"+this.props.data),
-                fetch("http://127.0.0.1:8000/api/deaths/"+this.props.data),
-                fetch("http://127.0.0.1:8000/api/recoveries/"+this.props.data)]).then( (responses) => {
-                    
-                    return Promise.all(responses.map(function (response) {
-                        return response.json();
-                    }));
-                }).then((data) => {
-                    
-                    this.setState({
-                        country: this.props.data,
-                        data: {'conf': data[0], 'death': data[1], 'rec': data[2]},
-                    });
-
-                    console.log(this.state.data);
-                }).catch(function (error) {
-                    console.log(error);
+            fetch("/api/data/"+this.props.data).then(res => {
+                return res.json()
+            }).then(data => {
+                this.setState({
+                    country: this.props.data,
+                    data,
                 });
+                console.log(this.state.data);
+            }).catch(err => {
+                console.log(err);
+            })
             }
     }
     }
@@ -50,7 +42,7 @@ class DisplayPanel extends Component {
         );
     }
 
-    display() {
+    display( loaded ) {
         return(
             <div>
                 <h4 style={{textAlign: 'center'}}>{this.state.country}</h4>
@@ -64,7 +56,7 @@ class DisplayPanel extends Component {
                     </label>
                     <br/><br/>
                 </td>
-                <td><br/><span> ??? </span><br/><br/></td>
+                <td><br/><span> {loaded && this.state.data.rank} </span><br/><br/></td>
             </tr>
             <tr>
                 <td>
@@ -73,7 +65,7 @@ class DisplayPanel extends Component {
                     </label>
                     <br/><br/>
                 </td>
-                <td><span> {this.state.data == null? '': this.state.data.conf.total} </span><br/><br/></td>
+                <td><span> {loaded && this.state.data.currconfirmed} </span><br/><br/></td>
             </tr>
             <tr>
                 <td>
@@ -82,7 +74,7 @@ class DisplayPanel extends Component {
                     </label>
                     <br/><br/>
                 </td>
-                <td><span> {this.state.data == null? '': this.state.data.death.total} </span><br/><br/></td>
+                <td><span> {loaded && this.state.data.currdeath} </span><br/><br/></td>
             </tr>
             <tr>
                 <td>
@@ -91,7 +83,7 @@ class DisplayPanel extends Component {
                     </label>
                     <br/><br/>
                 </td>
-                <td><span> {this.state.data == null? '': this.state.data.rec.total} </span><br/><br/></td>
+                <td><span> {loaded && this.state.data.currrecovery} </span><br/><br/></td>
             </tr>
             <tr>
                 <td>
@@ -100,7 +92,7 @@ class DisplayPanel extends Component {
                     </label>
                     <br/><br/>
                 </td>
-                <td><span> {this.state.data == null? '': this.state.data.conf.total- (this.state.data.rec.total+this.state.data.death.total)} </span><br/><br/></td>
+                <td><span> {loaded && this.state.data.curractive} </span><br/><br/></td>
             </tr>
             <tr>
                 <td>
@@ -109,7 +101,10 @@ class DisplayPanel extends Component {
                     </label>
                     <br/><br/>
                 </td>
-                <td><span> 45020389 </span><br/><br/></td>
+                <td><span> {loaded && 
+                this.state.data.confirmed[this.state.data.confirmed.length-1]
+                - this.state.data.confirmed[this.state.data.confirmed.length-2]
+                } </span><br/><br/></td>
             </tr>
             </tbody>
         </table>
@@ -117,10 +112,18 @@ class DisplayPanel extends Component {
         );
     }
 
+    noData() {
+        return(
+            <div style={{display: 'block', textAlign: 'center', padding: '2%'}}>
+                <h3 >No Details are Available</h3>
+            </div>
+        );
+    }
+
     render() {
         return (
             <div className='displayPanel' style={{width: this.state.width, height: window.innerHeight, float:"right", verticalAlign:'bottom'}}>
-                {this.props.data == null? this.empty() : this.display()}
+                {this.props.data == null? this.empty() : this.state.data == null? this.display(false): this.state.data.detail === 'Not found.'? this.noData() : this.display(true)}
             </div>
         )
     }
