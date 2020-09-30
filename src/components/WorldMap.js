@@ -10,6 +10,7 @@ class WorldMap extends Component {
             width: window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530,
             height: window.innerHeight - 79 >= 420 ? window.innerHeight - 79 : 420,
             displayWidth: window.innerWidth - (window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530) - 17 < 200? 200: window.innerWidth - (window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530) - 17,
+            displayHeight: window.innerHeight - 79 >= 420 ? window.innerHeight - 79 : 420,
             active: null,
             selected: null,
             data: null,
@@ -35,10 +36,12 @@ class WorldMap extends Component {
         let width = window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530;
         let height = window.innerHeight - 79 >= 420 ? window.innerHeight - 79 : 420;
         let displayWidth = window.innerWidth - width - 17;
+        let displayHeight = window.innerHeight - 79 >= 420 ? window.innerHeight - 79 : 420;
         this.setState({
             width,
             height,
             displayWidth,
+            displayHeight,
         })
     }
 
@@ -141,7 +144,7 @@ class WorldMap extends Component {
     render() {
         let { viewBox } = this.state;
         return(
-            <div ref={this.ref} style={{float:"left"}}>
+            <div ref={this.ref}>
                 {viewBox !== '-50 -10 1156 670' &&
                     <div className='my-icon-button undo-button' onClick={this.resetViewBox} >
                         <UndoIcon/>
@@ -1431,7 +1434,7 @@ class WorldMap extends Component {
                     </g>
                 </svg>
         <ReactTooltip id='tooltip' type='dark' getContent={() => this.getData()}></ReactTooltip>
-        <DisplayPanel width={this.state.displayWidth} data={this.state.data}/>
+        <DisplayPanel width={this.state.displayWidth} data={this.state.data} height={this.state.displayHeight}/>
             </div>
         )
     }

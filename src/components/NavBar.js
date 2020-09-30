@@ -28,10 +28,10 @@ class NavBar extends Component {
             titleWidth: 140.91,
             liWidth: 64,
             navItems: [
-                {id: 'contact', tooltipContent: 'Contact Me', icon: <MessengerIcon/>},
+                {id: 'contact', tooltipContent: 'Leave a Message', icon: <MessengerIcon/>},
                 {id: 'news', tooltipContent: 'News', icon:<BoltIcon/>},
                 {id: 'stats', tooltipContent: 'Statistics', icon: <ChartIcon/>},
-                {id: 'settings', tooltipContent: 'Settings', icon: <CogIcon/>}
+                {id: 'settings', tooltipContent: 'About Me', icon: <UserIcon/>}
             ]
         }
         let navWidth = window.innerWidth - (14*2)

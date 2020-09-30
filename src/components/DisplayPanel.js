@@ -7,20 +7,23 @@ class DisplayPanel extends Component {
         super(props);
         this.state = {
             width: this.props.width,
+            height: this.props.height,
             country: null,
             data: null,
         }
     }
 
     componentDidUpdate(prevProps) {
-        if( prevProps.width !== this.props.width ) {
-            this.setState({width: this.props.width});
+        if( (prevProps.width !== this.props.width) || (prevProps.height !== this.props.height)) {
+            this.setState({width: this.props.width, height: this.props.height});
         }
         if( this.props.data !== null ) {
         if( prevProps.data !== this.props.data ) {
             fetch("/api/data/"+this.props.data).then(res => {
                 return res.json()
             }).then(data => {
+                // console.log(data.confirmed[data.confirmed.length - 1]);
+                // console.log(data.confirmed[data.confirmed.length - 2]);
                 this.setState({
                     country: this.props.data,
                     data,
@@ -122,7 +125,7 @@ class DisplayPanel extends Component {
 
     render() {
         return (
-            <div className='displayPanel' style={{width: this.state.width, height: window.innerHeight, float:"right", verticalAlign:'bottom'}}>
+            <div className='displayPanel' style={{width: this.state.width, height: this.state.height, float:"right", verticalAlign:'bottom'}}>
                 {this.props.data == null? this.empty() : this.state.data == null? this.display(false): this.state.data.detail === 'Not found.'? this.noData() : this.display(true)}
             </div>
         )
