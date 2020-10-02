@@ -1,24 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import assign from 'object-assign'
+import assign from 'object-assign';
+import C2S from '../libraries/C2S';
 
 class DrawableCanvas extends React.Component {
 
   state = {}
 
+  constructor(props) {
+    super(props);
+  }
+
   componentDidMount(){
     const node = ReactDOM.findDOMNode(this);
     const canvas = node.querySelector('.canvas');
 
-    canvas.style.width = '100%';
-    canvas.style.height = '500px';
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
+    canvas.style.width = 400;
+    canvas.style.height = 300;
+    canvas.width = 400;
+    canvas.height = 300;
 
     const context = canvas.getContext('2d');
+    const serializable = C2S(300, 400);
 
     this.setState({
+      serializable,
       canvas,
       context,
       lineWidth: this.props.lineWidth,
@@ -35,7 +42,7 @@ class DrawableCanvas extends React.Component {
   }
   static getDefaultStyle() {
     return {
-      brushColor: '#FFFF00',
+      brushColor: 'rgba(225, 255, 0, 1)',
       lineWidth: 4,
       cursor: 'pointer',
       canvasStyle: {
@@ -114,6 +121,20 @@ class DrawableCanvas extends React.Component {
     this.state.context.moveTo(lX, lY);
     this.state.context.lineTo(cX, cY);
     this.state.context.stroke();
+    this.updateSvg(lX, lY, cX, cY);
+  }
+
+  updateSvg(lX, lY, cX, cY) {
+    var serializable = this.state.serializable;
+    // serializable.strokeStyle = this.state.brushColor;
+    // serializable.lineWidth = this.state.lineWidth;
+    serializable.moveTo(lX, lY);
+    serializable.lineTo(cX, cY);
+    serializable.stroke();
+    serializable.save();
+    this.setState({
+      serializable,
+    })
   }
 
   setColor(e) {
@@ -126,6 +147,10 @@ class DrawableCanvas extends React.Component {
     const width = this.state.context.canvas.width;
     const height = this.state.context.canvas.height;
     this.state.context.clearRect(0, 0, width, height);
+    var serializable = C2S(300, 400);
+    this.setState({
+      serializable,
+    })
   }
 
   canvasStyle(){
@@ -135,51 +160,10 @@ class DrawableCanvas extends React.Component {
     return assign({}, defaults, custom);
   }
 
-  colorPalette = () => {
-    return(
-      <div className='color-palette' style={{backgroundColor: 'lightyellow'}}>
-        <ul>
-          <li style={{float: 'left',}}>
-            <ul typeof='None'>
-              <li><div style={{backgroundColor: 'red'}} onClick={this.setColor}></div></li>
-              <li><div style={{backgroundColor: 'yellow'}} onClick={this.setColor}></div></li>
-              <li><div style={{backgroundColor: 'black'}} onClick={this.setColor}></div></li>
-            </ul>
-          </li>
-          <br/>
-          <li style={{float: 'left',}}>
-            <ul typeof='None'>
-              <li><div style={{backgroundColor: 'blue'}} onClick={this.setColor}></div></li>
-              <li><div style={{backgroundColor: 'purple'}} onClick={this.setColor}></div></li>
-              <li><div style={{backgroundColor: 'grey'}} onClick={this.setColor}></div></li>
-            </ul>
-          </li>
-          <br/>
-          <li style={{float: 'left',}}>
-            <ul typeof='None'>
-              <li><div style={{backgroundColor: 'green'}} onClick={this.setColor}></div></li>
-              <li><div style={{backgroundColor: 'orange'}} onClick={this.setColor}></div></li>
-              <li><div style={{backgroundColor: 'brown'}} onClick={this.setColor}></div></li>
-            </ul>
-          </li>
-          <br/>
-          <li style={{float: 'left',}}>
-            <ul typeof='None'>
-              <li><div style={{backgroundColor: 'pink'}} onClick={this.setColor}></div></li>
-              <li><div style={{backgroundColor: 'lightgreen'}} onClick={this.setColor}></div></li>
-              <li><div style={{backgroundColor: 'magenta'}} onClick={this.setColor}></div></li>
-            </ul>
-          </li>
-          <br/>
-        </ul>
-      </div>
-    );
-  }
-
   render() {
     return (
-        <div className='drawable-canvas'>
-          {this.colorPalette()}
+      <div>
+        <div className='drawable-canvas' style={{marginTop: '5px', border: 'black solid'}}>
       <canvas className='canvas' style = {this.canvasStyle()}
         onMouseDown = {this.handleOnMouseDown.bind(this)}
         onTouchStart = {this.handleOnTouchStart.bind(this)}
@@ -189,9 +173,12 @@ class DrawableCanvas extends React.Component {
         onTouchEnd = {this.handleonMouseUp.bind(this)}
       >
       </canvas>
-      <button onClick={() => {this.props.saveFunction(this.state.context); this.props.toggle()}}>Done</button>
-      <button onClick={this.resetCanvas}>Clear</button>
-      <button onClick={() => {this.props.toggle()}}>Cancel</button>
+      </div>
+      <div style={{display: 'flex'}}>
+      <div className='popup-btn' onClick={() => {this.props.saveFunction(this.state.serializable.getSerializedSvg(true));}}><h6>Done</h6></div>
+      <div className='popup-btn' onClick={this.resetCanvas}><h6>Clear</h6></div>
+      <div className='popup-btn' onClick={() => {this.props.toggle();}}><h6>Cancel</h6></div>
+      </div>
       </div>
     );
   }
@@ -208,7 +195,50 @@ DrawableCanvas.propTypes = {
   clear: PropTypes.bool,
   remarks: PropTypes.array,
   saveFunction: PropTypes.func,
-  toggle: PropTypes.func,
+  // toggle: PropTypes.func,
 };
 
 export default DrawableCanvas;
+
+
+
+// colorPalette = () => {
+//   return(
+//     <div className='color-palette' style={{backgroundColor: 'lightyellow'}}>
+//       <ul>
+//         <li style={{float: 'left',}}>
+//           <ul typeof='None'>
+//             <li><div style={{backgroundColor: 'red'}} onClick={this.setColor}></div></li>
+//             <li><div style={{backgroundColor: 'yellow'}} onClick={this.setColor}></div></li>
+//             <li><div style={{backgroundColor: 'black'}} onClick={this.setColor}></div></li>
+//           </ul>
+//         </li>
+//         <br/>
+//         <li style={{float: 'left',}}>
+//           <ul typeof='None'>
+//             <li><div style={{backgroundColor: 'blue'}} onClick={this.setColor}></div></li>
+//             <li><div style={{backgroundColor: 'purple'}} onClick={this.setColor}></div></li>
+//             <li><div style={{backgroundColor: 'grey'}} onClick={this.setColor}></div></li>
+//           </ul>
+//         </li>
+//         <br/>
+//         <li style={{float: 'left',}}>
+//           <ul typeof='None'>
+//             <li><div style={{backgroundColor: 'green'}} onClick={this.setColor}></div></li>
+//             <li><div style={{backgroundColor: 'orange'}} onClick={this.setColor}></div></li>
+//             <li><div style={{backgroundColor: 'brown'}} onClick={this.setColor}></div></li>
+//           </ul>
+//         </li>
+//         <br/>
+//         <li style={{float: 'left',}}>
+//           <ul typeof='None'>
+//             <li><div style={{backgroundColor: 'pink'}} onClick={this.setColor}></div></li>
+//             <li><div style={{backgroundColor: 'lightgreen'}} onClick={this.setColor}></div></li>
+//             <li><div style={{backgroundColor: 'magenta'}} onClick={this.setColor}></div></li>
+//           </ul>
+//         </li>
+//         <br/>
+//       </ul>
+//     </div>
+//   );
+// }

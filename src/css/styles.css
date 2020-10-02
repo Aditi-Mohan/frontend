@@ -208,11 +208,13 @@ Link {
 }
 
 .add-remark-btn {
+    cursor: pointer;
     right: 0;
     z-index: 99;
     margin-bottom: 1rem;
     position: absolute;
     width: 100px;
+    display: flex;
     height: 45px;
     color: var(--text-color);
     background-color: #484a4d;
@@ -239,4 +241,26 @@ Link {
 
 .add-remark-btn:hover svg {
     fill: var(--bg);
+}
+
+.popup-btn {
+    margin: 5px;
+    cursor: pointer;
+    width: 100px;
+    display: flex;
+    height: 45px;
+    color: var(--text-color);
+    background-color: #484a4d;
+    border-radius: 20px;
+    justify-content: center;
+    transition: all var(--speed);
+}
+
+.popup-btn:hover {
+    width: 107px;
+    height: 52px;
+    filter: brightness(1.2);
+    color: var(--bg);
+    background-color: var(--highlight-color);
+    box-shadow: rgb(111, 114, 124) 1px 1px 4px;
 }

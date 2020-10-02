@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import HorizontalScroll from 'react-scroll-horizontal';
 import { ReactComponent as EditIcon } from '../svgs/icons/edit.svg'
+import DrawableCanvas from './DrawableCanvas';
 
 class Messages extends Component {
     state = {}
@@ -9,9 +10,11 @@ class Messages extends Component {
         super();
         var remarks = this.getRemarks();
         this.state = {
+            popup: false,
             remarks,
         }
         this.updateDimensions = this.updateDimensions.bind(this);
+        this.togglePopup = this.togglePopup.bind(this);
     }
 
     componentDidMount() {
@@ -27,6 +30,12 @@ class Messages extends Component {
         this.setState({
             width,
         })
+    }
+
+    togglePopup() {
+        this.setState({
+            popup: !this.state.popup,
+        });
     }
 
     getRemarks() {
@@ -101,18 +110,43 @@ class Messages extends Component {
         return remarks;
     }
 
+    structureRemarks() {
+        for(var i=0; i< this.state.remarks.length; i+=3) {
+
+        }
+    }
+
+    addRemark(newRemark) {
+        console.log(newRemark);
+        this.setState({
+            remarks: [...this.state.remarks, newRemark],
+        })
+    }
+
+    showPopUp() {
+        return(
+            <div style={{zIndex: 90, width: window.innerWidth, height: window.innerHeight, position: "fixed", top: 0, left: 0, backgroundColor: 'rgba(0,0,0,0.3)'}}>
+                <div style={{padding: '2%', width: window.innerWidth - 100, height: window.innerHeight - 100, position: "fixed", top: 50, left: 50, backgroundColor: 'white', borderRadius: '20px'}}>
+                    <DrawableCanvas/>
+                </div>
+            </div>
+        )
+    }
+
     render() {
         return(
             <div style={{height: '735px', marginLeft: 20, width: this.state.width - 47}}>
                 <h1 style={{fontSize:60}}>Leave a Message</h1>
-                <div className='add-remark-btn' style={{marginTop: window.innerHeight*0.9 - 45, marginRight: window.innerWidth*0.03 + 20,}}>
+                {!this.state.popup && <div onClick={this.togglePopup} className='add-remark-btn' style={{marginTop: window.innerHeight*0.9 - 45, marginRight: window.innerWidth*0.03 + 20,}}>
                     <EditIcon/>
-                </div>
+                    <h5 style={{marginTop: 4}}>Add</h5>
+                </div>}
                 <div style={{height: '605px', width: this.state.width - 57}}>
                     <HorizontalScroll reverseScroll={true}>
                         {this.state.remarks}
                     </HorizontalScroll>
                 </div>
+                {this.state.popup && this.showPopUp()}
             </div>
         )
     }
