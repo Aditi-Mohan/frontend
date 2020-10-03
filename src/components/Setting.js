@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import DrawableCanvas from './DrawableCanvas';
-import C2S from '../libraries/C2S';
 
 class Settings extends Component {
     state = {}
@@ -11,13 +10,12 @@ class Settings extends Component {
             remarks: [],
         }
         this.saveRemark = this.saveRemark.bind(this);
-        console.log(typeof (() => {}));
     }
 
     componentDidMount() {
-        this.state = {
+        this.setState({
             remarks: [],
-        }
+        })
     }
 
     saveRemark(newRemark) {

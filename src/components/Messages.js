@@ -9,12 +9,14 @@ class Messages extends Component {
     constructor() {
         super();
         var remarks = this.getRemarks();
+        console.log(remarks.length);
         this.state = {
             popup: false,
             remarks,
         }
         this.updateDimensions = this.updateDimensions.bind(this);
         this.togglePopup = this.togglePopup.bind(this);
+        this.addRemark = this.addRemark.bind(this);
     }
 
     componentDidMount() {
@@ -47,87 +49,57 @@ class Messages extends Component {
           
           const images = importAll(require.context('../images', false, /\.(png|jpe?g|svg)$/));
           var remarks = [];
-          var i=0;
-          var block = [];
-          for(var keys in images) {
-              if( i < 2 ) {
-                  block.push(keys);
-                  i++;
-                  continue;
-              }
-              if( i === 2) {
-                remarks.push(
-                    <div key={Math.random()} style={{width: '305px', height: '405px'}} >
-                        <img width='300px' height='200px' src={images[block[0]]} alt={block[0]}/>
-                        <img width='300px' height='200px' src={images[block[1]]} alt={block[1]}/>
-                        <img width='300px' height='200px' src={images[keys]} alt={keys}/>
-                    </div>
-                )
-                i=0;
-                block = [];
-              }
-          }
-          i=0;
-          block = [];
-          for(var keys in images) {
-            if( i < 2 ) {
-                block.push(keys);
-                i++;
-                continue;
-            }
-            if( i === 2) {
-              remarks.push(
-                  <div key={Math.random()} style={{width: '305px', height: '405px'}} >
-                    <img width='300px' height='200px' src={images[block[0]]} alt={block[0]}/>
-                    <img width='300px' height='200px' src={images[block[1]]} alt={block[1]}/>
-                    <img width='300px' height='200px' src={images[keys]} alt={keys}/>
-                  </div>
-              )
-              i=0;
-              block = [];
-            }
-        }
-        i=0;
-        block = [];
-        for(var keys in images) {
-            if( i < 2 ) {
-                block.push(keys);
-                i++;
-                continue;
-            }
-            if( i === 2) {
-              remarks.push(
-                  <div key={Math.random()} style={{width: '305px', height: '405px'}} >
-                    <img width='300px' height='200px' src={images[block[0]]} alt={block[0]}/>
-                    <img width='300px' height='200px' src={images[block[1]]} alt={block[1]}/>
-                    <img width='300px' height='200px' src={images[keys]} alt={keys}/>
-                  </div>
-              )
-              i=0;
-              block = [];
+          for(var i=0; i<3; i++){
+            var j=1;
+            var block = [];
+            for(var keys in images) {
+                if( j === 3) {
+                    block.push(<div><img width='300px' height='200px' src={images[keys]} alt={keys}></img></div>);
+                    remarks.push(block);
+                    j=1;
+                    block=[];
+                }
+                else {
+                    block.push(<div><img width='300px' height='200px' src={images[keys]} alt={keys}></img></div>);
+                    j++;
+                }
             }
         }
         return remarks;
     }
 
-    structureRemarks() {
-        for(var i=0; i< this.state.remarks.length; i+=3) {
-
+    addRemark(newRemark, color) {
+        var len = this.state.remarks.length;
+        newRemark = <div style={{width: '300px', height: '200px'}} dangerouslySetInnerHTML={{__html: newRemark}}></div>
+        if(color) {
+            newRemark.props.style.backgroundColor = color;
         }
-    }
-
-    addRemark(newRemark) {
-        console.log(newRemark);
-        this.setState({
-            remarks: [...this.state.remarks, newRemark],
-        })
+        if( len === 0 ) {
+            this.setState({
+                remarks: [[newRemark]],
+            })
+        }
+        else if(this.state.remarks[len - 1].length < 3 ) {
+            var block = this.state.remarks[len-1];
+            block.push(newRemark);
+            this.setState({
+                remarks: [...(this.state.remarks.slice(0,len-1)), block],
+            })
+        }
+        else {
+            this.setState({
+                remarks: [...this.state.remarks, [newRemark]],
+            })
+        }
+        //add to database
     }
 
     showPopUp() {
         return(
-            <div style={{zIndex: 90, width: window.innerWidth, height: window.innerHeight, position: "fixed", top: 0, left: 0, backgroundColor: 'rgba(0,0,0,0.3)'}}>
-                <div style={{padding: '2%', width: window.innerWidth - 100, height: window.innerHeight - 100, position: "fixed", top: 50, left: 50, backgroundColor: 'white', borderRadius: '20px'}}>
-                    <DrawableCanvas/>
+            <div style={{ zIndex: 90, width: window.innerWidth, height: window.innerHeight, position: "fixed", top: 0, left: 0, backgroundColor: 'rgba(0,0,0,0.3)', display: 'flex', justifyContent: 'center'}}>
+                <div style={{ borderLeft: '20px #fae19b outset', paddingTop: 0, paddingLeft: 0, padding: '5%', backgroundColor: 'white', borderRadius: '20px'}}>
+                    <h5>Write a Message</h5>
+                    <DrawableCanvas brushColor='#000000' toggle={this.togglePopup} saveFunction={this.addRemark}/>
                 </div>
             </div>
         )
@@ -143,7 +115,9 @@ class Messages extends Component {
                 </div>}
                 <div style={{height: '605px', width: this.state.width - 57}}>
                     <HorizontalScroll reverseScroll={true}>
-                        {this.state.remarks}
+                        {this.state.remarks.map((item, index) => (
+                            <div style={{width: '305px', height: '605px'}} key={index}>{item}</div>
+                        ))}
                     </HorizontalScroll>
                 </div>
                 {this.state.popup && this.showPopUp()}

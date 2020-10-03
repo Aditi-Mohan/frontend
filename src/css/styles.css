@@ -195,11 +195,7 @@ Link {
 }
 
 .drawable-canvas {
-    /* z-index: 1; */
-    width: 80%;
-    /* position: absolute;
-    top: 25%; */
-    background-color: white;
+    width: 300px;
 }
 
 .popup {
@@ -246,7 +242,7 @@ Link {
 .popup-btn {
     margin: 5px;
     cursor: pointer;
-    width: 100px;
+    width: 90px;
     display: flex;
     height: 45px;
     color: var(--text-color);
@@ -256,11 +252,50 @@ Link {
     transition: all var(--speed);
 }
 
+.popup-btn h6 {
+    font-weight: 700;
+}
+
+.popup-btn:hover h6 {
+    font-weight: 900;
+}
+
+.add-remark-btn h5 {
+    font-weight: 600;
+}
+
+.add-remark-btn:hover h5 {
+    font-weight: 900;
+}
+
 .popup-btn:hover {
-    width: 107px;
+    width: 97px;
     height: 52px;
     filter: brightness(1.2);
     color: var(--bg);
     background-color: var(--highlight-color);
     box-shadow: rgb(111, 114, 124) 1px 1px 4px;
+}
+
+.grid-container {
+    width: 145px;
+    height: 145px;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 10px;
+    margin-top: 0;
+    border: #525357 1px solid;
+  }
+  .grid-item {
+    border-radius: 5px;
+    margin: 5px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+  }
+
+.grid-container div{
+    cursor: pointer;
 }
