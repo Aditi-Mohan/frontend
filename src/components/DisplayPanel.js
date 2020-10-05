@@ -47,7 +47,7 @@ class DisplayPanel extends Component {
 
     display( loaded ) {
         return(
-            <div>
+            <div id='display-div' style={{overflow: 'hidden'}}>
                 <h4 style={{textAlign: 'center'}}>{this.state.country}</h4>
         <table className='display-table'>
             <tbody>
@@ -111,8 +111,15 @@ class DisplayPanel extends Component {
             </tr>
             </tbody>
         </table>
+        <div onClick={this.chartsPage} style={{marginLeft: (this.state.width - 150)/2, width: 150}} className='popup-btn'><h6>View Charts</h6></div>
     </div>
         );
+    }
+
+    chartsPage() {
+        var disp = document.getElementById('displayPanel');
+        disp.classList.toggle('charts-active');
+        console.log(disp);
     }
 
     noData() {
@@ -125,7 +132,7 @@ class DisplayPanel extends Component {
 
     render() {
         return (
-            <div className='displayPanel' style={{width: this.state.width, height: this.state.height, float:"right", verticalAlign:'bottom'}}>
+            <div id='displayPanel' style={{width: this.state.width, height: this.state.height, verticalAlign:'bottom', position: 'absolute', top: 80, right: 0}}>
                 {this.props.data == null? this.empty() : this.state.data == null? this.display(false): this.state.data.detail === 'Not found.'? this.noData() : this.display(true)}
             </div>
         )

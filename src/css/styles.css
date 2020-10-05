@@ -250,6 +250,7 @@ Link {
     border-radius: 20px;
     justify-content: center;
     transition: all var(--speed);
+    white-space: nowrap;
 }
 
 .popup-btn h6 {

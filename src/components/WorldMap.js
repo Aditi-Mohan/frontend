@@ -35,7 +35,7 @@ class WorldMap extends Component {
     updateDimensions() {
         let width = window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530;
         let height = window.innerHeight - 79 >= 420 ? window.innerHeight - 79 : 420;
-        let displayWidth = window.innerWidth - width - 17;
+        let displayWidth = window.innerWidth - (window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530) - 17 < 200? 200: window.innerWidth - (window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530) - 17;
         let displayHeight = window.innerHeight - 79 >= 420 ? window.innerHeight - 79 : 420;
         this.setState({
             width,

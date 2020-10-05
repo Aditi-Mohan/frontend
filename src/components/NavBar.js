@@ -79,7 +79,7 @@ class NavBar extends Component {
         })
         return(
             <nav className='my-navbar'>
-                <Link data-tip data-for='home' to='/' className='left brand-logo' style={{paddingLeft: '2rem', paddingBottom: '1rem'}}>WEBSITE</Link>
+                <Link data-tip data-for='home' to='/' className='left brand-logo' style={{paddingLeft: '2rem', paddingBottom: '1rem'}}>COVIZ</Link>
                 <ReactStyledTooltip id='home' place='bottom' effect='solid'><div>Home</div></ReactStyledTooltip>
                 <ul className='right navbar-nav'>
                     {listOfNavItems}

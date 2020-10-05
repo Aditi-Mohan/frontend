@@ -1,0 +1,55 @@
+.amcharts-g2 {
+    stroke-dasharray: 3px 3px;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    -webkit-animation: am-moving-dashes 1s linear infinite;
+    animation: am-moving-dashes 1s linear infinite;
+  }
+  
+  @-webkit-keyframes am-moving-dashes {
+    100% {
+      stroke-dashoffset: -31px;
+    }
+  }
+  @keyframes am-moving-dashes {
+    100% {
+      stroke-dashoffset: -31px;
+    }
+  }
+  
+  .amcharts-graph-column-front {
+    -webkit-transition: all .3s .3s ease-out;
+    transition: all .3s .3s ease-out;
+  }
+  .amcharts-graph-column-front:hover {
+    fill: #496375;
+    stroke: #496375;
+    -webkit-transition: all .3s ease-out;
+    transition: all .3s ease-out;
+  }
+  
+  .amcharts-g3 {
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    stroke-dasharray: 500%;
+    stroke-dasharray: 0 ;    /* fixes IE prob */
+    stroke-dashoffset: 0 ;   /* fixes IE prob */
+    -webkit-animation: am-draw 40s;
+    animation: am-draw 40s;
+  }
+  @-webkit-keyframes am-draw {
+      0% {
+          stroke-dashoffset: 500%;
+      }
+      100% {
+          stroke-dashoffset: 0%;
+      }
+  }
+  @keyframes am-draw {
+      0% {
+          stroke-dashoffset: 500%;
+      }
+      100% {
+          stroke-dashoffset: 0%;
+      }
+  }
