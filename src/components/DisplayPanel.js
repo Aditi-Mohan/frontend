@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../css/displayPanel.css';
 import {ReactComponent as Tap} from '../svgs/icons/tap.svg';
+import Charts from './Charts';
 
 class DisplayPanel extends Component {
     constructor(props) {
@@ -47,8 +48,10 @@ class DisplayPanel extends Component {
 
     display( loaded ) {
         return(
-            <div id='display-div' style={{overflow: 'hidden'}}>
-                <h4 style={{textAlign: 'center'}}>{this.state.country}</h4>
+            <div>
+                <h4 style={{textAlign: 'center', float: 'top'}}>dfsdfsdfd{this.state.country}</h4>
+            <div style={{display: 'flex'}}>
+            <div id='display-div'>
         <table className='display-table'>
             <tbody>
         <tr>
@@ -111,15 +114,11 @@ class DisplayPanel extends Component {
             </tr>
             </tbody>
         </table>
-        <div onClick={this.chartsPage} style={{marginLeft: (this.state.width - 150)/2, width: 150}} className='popup-btn'><h6>View Charts</h6></div>
+        </div>
+        <Charts/>
+    </div>
     </div>
         );
-    }
-
-    chartsPage() {
-        var disp = document.getElementById('displayPanel');
-        disp.classList.toggle('charts-active');
-        console.log(disp);
     }
 
     noData() {
@@ -132,7 +131,7 @@ class DisplayPanel extends Component {
 
     render() {
         return (
-            <div id='displayPanel' style={{width: this.state.width, height: this.state.height, verticalAlign:'bottom', position: 'absolute', top: 80, right: 0}}>
+            <div id='displayPanel' style={{top: 80, right: 0, width: this.state.width, height: this.state.height}}>
                 {this.props.data == null? this.empty() : this.state.data == null? this.display(false): this.state.data.detail === 'Not found.'? this.noData() : this.display(true)}
             </div>
         )

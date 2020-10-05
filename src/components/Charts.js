@@ -4,8 +4,10 @@ import '../css/Charts.css';
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import am4themes_dark from '@amcharts/amcharts4/themes/dark';
 
 am4core.useTheme(am4themes_animated);
+am4core.useTheme(am4themes_dark);
 
 function Charts(props) {
   const chart = useRef(null);
@@ -132,18 +134,18 @@ function Charts(props) {
       
       // Create axes
       let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-    //   dateAxis.dataFields.category = "category";
+      dateAxis.dataFields.category = "category";
       dateAxis.renderer.grid.template.location = 0;
       dateAxis.renderer.minGridDistance = 50;
       dateAxis.renderer.grid.template.disabled = true;
       dateAxis.renderer.fullWidthTooltip = true;
       
       let distanceAxis = chart.yAxes.push(new am4charts.ValueAxis());
-      distanceAxis.title.text = "Distance";
+    //   distanceAxis.title.text = "Distance";
       distanceAxis.renderer.grid.template.disabled = true;
       
       let durationAxis = chart.yAxes.push(new am4charts.DurationAxis());
-      durationAxis.title.text = "Duration";
+    //   durationAxis.title.text = "Duration";
       durationAxis.baseUnit = "minute";
       durationAxis.renderer.grid.template.disabled = true;
       durationAxis.renderer.opposite = true;
@@ -205,10 +207,10 @@ function Charts(props) {
       let latitudeState = latitudeBullet.states.create("hover");
       latitudeState.properties.scale = 1.2;
       
-      let latitudeLabel = latitudeSeries.bullets.push(new am4charts.LabelBullet());
-      latitudeLabel.label.text = "{townName2}";
-      latitudeLabel.label.horizontalCenter = "left";
-      latitudeLabel.label.dx = 14;
+    //   let latitudeLabel = latitudeSeries.bullets.push(new am4charts.LabelBullet());
+    //   latitudeLabel.label.text = "{townName2}";
+    //   latitudeLabel.label.horizontalCenter = "left";
+    //   latitudeLabel.label.dx = 14;
       
       // Add legend
       chart.legend = new am4charts.Legend();

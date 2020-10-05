@@ -1,7 +1,9 @@
-.displayPanel {
-    background-color:  #242526;
+#displayPanel {
+    background-color: #242526;
     color: #fae19b;
     padding: 0.2rem;
+    position: absolute;
+    transition: all 1.5s;
 }
 .display-table span {
     color: #dadce1;

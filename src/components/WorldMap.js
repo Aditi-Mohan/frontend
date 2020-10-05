@@ -1,19 +1,16 @@
 import React, { Component } from 'react';
 import { ReactComponent as UndoIcon } from '../svgs/icons/undo.svg';
 import ReactTooltip from 'react-tooltip';
-import DisplayPanel from './DisplayPanel';
 
 class WorldMap extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             width: window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530,
             height: window.innerHeight - 79 >= 420 ? window.innerHeight - 79 : 420,
             displayWidth: window.innerWidth - (window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530) - 17 < 200? 200: window.innerWidth - (window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530) - 17,
             displayHeight: window.innerHeight - 79 >= 420 ? window.innerHeight - 79 : 420,
             active: null,
-            selected: null,
-            data: null,
             viewBox: '-50 -10 1156 670',
             hoverColor: '#58d1c3',
             normalColor: '#112e2b',
@@ -21,7 +18,8 @@ class WorldMap extends Component {
             normalSelectedColor: '#4c6b68',
         }
         this.ref = React.createRef();
-        this.updateDimensions = this.updateDimensions.bind(this)
+        this.updateDimensions = this.updateDimensions.bind(this);
+        this.props.updateDimensionsCallback(this.state.width, this.state.height, this.state.displayWidth, this.state.displayHeight);
     }
     
     componentDidMount() {
@@ -33,9 +31,9 @@ class WorldMap extends Component {
     }
 
     updateDimensions() {
-        let width = window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530;
+        let width = !this.props.selected ? window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530 : window.innerWidth - 830 < 350? 350 : window.innerWidth - 830;
         let height = window.innerHeight - 79 >= 420 ? window.innerHeight - 79 : 420;
-        let displayWidth = window.innerWidth - (window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530) - 17 < 200? 200: window.innerWidth - (window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530) - 17;
+        let displayWidth = !this.props.selected? window.innerWidth - (window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530) - 17 < 200? 200: window.innerWidth - (window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530) - 17: window.innerWidth - width - 17;
         let displayHeight = window.innerHeight - 79 >= 420 ? window.innerHeight - 79 : 420;
         this.setState({
             width,
@@ -43,6 +41,7 @@ class WorldMap extends Component {
             displayWidth,
             displayHeight,
         })
+        this.props.updateDimensionsCallback(this.state.width, this.state.height, this.state.displayWidth, this.state.displayHeight);
     }
 
     handleHover = (e) => {
@@ -60,6 +59,14 @@ class WorldMap extends Component {
     }
 
     handleClick = (e) => {
+
+        let width = window.innerWidth - 830 < 350? 350: window.innerWidth - 830;
+        let displayWidth = window.innerWidth - width - 17;
+        this.setState({
+            width,
+            displayWidth,
+        })
+
         const d = e.target.getAttribute('d').toString().split(' ').filter(item => {return !(/^[A-Z]$/i.test(item))});
         const start_x = Number(d[0].slice(0,d[0].indexOf(',')))
         const start_y = Number(d[0].slice(d[0].indexOf(',')+1))
@@ -89,31 +96,33 @@ class WorldMap extends Component {
                 max_y = next_point_y
             }
         }
-        var country = e.target.getAttribute('title');
         this.setState({
-            selected: e.target.id,
-            data: country,
             viewBox: Math.round(min_x-6)+' '+Math.round(min_y-6)+' '+Math.round(max_x-min_x+12)+' '+Math.round(max_y-min_y+12),
         })
+        var country = e.target.getAttribute('title');
+        this.props.clickCallback(e.target.id, country, width, displayWidth);
     }
 
     resetViewBox = (e) => {
+        let width = window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530;
+        let displayWidth = window.innerWidth - (window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530) - 17 < 200? 200: window.innerWidth - (window.innerWidth - 300 >= 530 ?  window.innerWidth - 300 : 530) - 17
         this.setState({
+            width: width,
+            displayWidth: displayWidth,
             viewBox: '-50 -10 1156 670',
-            selected: null,
-            data: null,
         })
+        this.props.clickCallback(null, null, width, displayWidth);
     }
 
     fillColor(id) {
         let { hoverColor, hoverSelectedColor, normalColor, normalSelectedColor} = this.state;
-        if(this.state.selected === null) {
+        if(this.props.selected === null) {
             if(this.state.active === id)
                 return hoverColor;
             else
                 return normalColor;
         }
-        else if(this.state.selected === id)
+        else if(this.props.selected === id)
             return hoverColor;
         else {
             if(this.state.active === id)
@@ -126,9 +135,9 @@ class WorldMap extends Component {
     getData() {
         const node = this.ref.current;
         var content;
-        if( this.state.selected !== null ) {
-            if ( this.state.active === this.state.selected ) {
-                content = node.querySelector('#main').querySelector('#'+this.state.selected).getAttribute('title');
+        if( this.props.selected !== null ) {
+            if ( this.state.active === this.props.selected ) {
+                content = node.querySelector('#main').querySelector('#'+this.props.selected).getAttribute('title');
             }
             else if( this.state.active !== null ){
              content = node.querySelector('#main').querySelector('#'+this.state.active).getAttribute('title');
@@ -149,7 +158,7 @@ class WorldMap extends Component {
                     <div className='my-icon-button undo-button' onClick={this.resetViewBox} >
                         <UndoIcon/>
                     </div>}
-                <svg width={this.state.width} height={this.state.height} viewBox={viewBox}>
+                <svg width={this.state.width} height={this.state.height} style={{transition: 'all 1.5s'}} viewBox={viewBox}>
                     <g data-tip data-for='tooltip' id='main'>
                 <path onClick={this.handleClick} onMouseOver={this.handleHover} onMouseLeave={this.handleMouseLeave}
                     fill={this.fillColor('AD')}
@@ -1434,7 +1443,6 @@ class WorldMap extends Component {
                     </g>
                 </svg>
         <ReactTooltip id='tooltip' type='dark' getContent={() => this.getData()}></ReactTooltip>
-        <DisplayPanel width={this.state.displayWidth} data={this.state.data} height={this.state.displayHeight}/>
             </div>
         )
     }
