@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.20.0",
     "canvg": "^3.0.6",
+    "moment": "^2.29.0",
     "object-assign": "^4.1.1",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",

@@ -9,7 +9,6 @@ class Messages extends Component {
     constructor() {
         super();
         var remarks = this.getRemarks();
-        console.log(remarks.length);
         this.state = {
             popup: false,
             remarks,

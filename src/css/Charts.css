@@ -1,5 +1,5 @@
 .amcharts-g2 {
-    stroke-dasharray: 3px 3px;
+    stroke-dasharray: 5px 5px;
     stroke-linejoin: round;
     stroke-linecap: round;
     -webkit-animation: am-moving-dashes 1s linear infinite;
@@ -17,7 +17,7 @@
     }
   }
   
-  .amcharts-graph-column-front {
+  /* .amcharts-graph-column-front {
     -webkit-transition: all .3s .3s ease-out;
     transition: all .3s .3s ease-out;
   }
@@ -27,7 +27,7 @@
     -webkit-transition: all .3s ease-out;
     transition: all .3s ease-out;
   }
-  
+   */
   .amcharts-g3 {
     stroke-linejoin: round;
     stroke-linecap: round;
@@ -52,4 +52,44 @@
       100% {
           stroke-dashoffset: 0%;
       }
+  }
+
+  .percentage-block {
+    background-color: rgba(250, 225, 155, 0.5);
+    text-align: center;
+    color: #dadce1;
+    padding: 1%;
+    border-radius: 10px;
+    margin: 1%;
+    white-space: nowrap;
+    border: "1px solid #fae19b",
+  }
+
+  .time-setter {
+    display: flex;
+    white-space: nowrap;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.5s;
+  }
+
+  .top5-table{
+    padding: 5px;
+    background-color: #242526;
+    color: #dadce1;
+  }
+
+  #chartdiv {
+    width: 100%;
+    max-width:100%;
+    height: 500px;
+  }
+  
+  #hiddenchartdiv{
+    width: 100%;
+    max-width:100%;
+    height: 500px;
+    visibility:hidden;
+    position:absolute;
+    top:0px;
   }

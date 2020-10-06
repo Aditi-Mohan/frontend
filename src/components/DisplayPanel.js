@@ -9,7 +9,6 @@ class DisplayPanel extends Component {
         this.state = {
             width: this.props.width,
             height: this.props.height,
-            country: null,
             data: null,
         }
     }
@@ -18,18 +17,17 @@ class DisplayPanel extends Component {
         if( (prevProps.width !== this.props.width) || (prevProps.height !== this.props.height)) {
             this.setState({width: this.props.width, height: this.props.height});
         }
-        if( this.props.data !== null ) {
-        if( prevProps.data !== this.props.data ) {
-            fetch("/api/data/"+this.props.data).then(res => {
+        if( this.props.country !== null ) {
+        if( prevProps.country !== this.props.country ) {
+            fetch("/api/data/"+this.props.country).then(res => {
                 return res.json()
             }).then(data => {
                 // console.log(data.confirmed[data.confirmed.length - 1]);
                 // console.log(data.confirmed[data.confirmed.length - 2]);
                 this.setState({
-                    country: this.props.data,
                     data,
                 });
-                console.log(this.state.data);
+                // this.props.fetchCallback(data);
             }).catch(err => {
                 console.log(err);
             })
@@ -49,11 +47,15 @@ class DisplayPanel extends Component {
     display( loaded ) {
         return(
             <div>
-                <h4 style={{textAlign: 'center', float: 'top'}}>dfsdfsdfd{this.state.country}</h4>
             <div style={{display: 'flex'}}>
             <div id='display-div'>
         <table className='display-table'>
             <tbody>
+                <tr>
+                    <td>
+                    <h4 style={{textAlign: 'center', float: 'top'}}>{this.props.country}</h4>
+                    </td>
+                </tr>
         <tr>
                 <td>
                     <br/>
@@ -115,7 +117,7 @@ class DisplayPanel extends Component {
             </tbody>
         </table>
         </div>
-        <Charts/>
+        <Charts height={this.state.height*0.89} data={this.state.data} dates={this.props.dates}/>
     </div>
     </div>
         );
@@ -132,7 +134,7 @@ class DisplayPanel extends Component {
     render() {
         return (
             <div id='displayPanel' style={{top: 80, right: 0, width: this.state.width, height: this.state.height}}>
-                {this.props.data == null? this.empty() : this.state.data == null? this.display(false): this.state.data.detail === 'Not found.'? this.noData() : this.display(true)}
+                {this.props.country == null? this.empty() : this.state.data == null? this.display(false): this.state.data.detail === 'Not found.'? this.noData() : this.display(true)}
             </div>
         )
     }

@@ -1,16 +1,25 @@
-import React, { useRef, useLayoutEffect } from 'react';
-/* Imports */
+import React, { useLayoutEffect, useState } from 'react';
 import '../css/Charts.css';
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import am4themes_dark from '@amcharts/amcharts4/themes/dark';
+import { round } from '@amcharts/amcharts4/.internal/core/utils/Math';
+import {ReactComponent as Bar} from '../svgs/icons/bar-graph.svg';
+import {ReactComponent as Curve} from '../svgs/icons/curve.svg';
 
 am4core.useTheme(am4themes_animated);
 am4core.useTheme(am4themes_dark);
 
 function Charts(props) {
-  const chart = useRef(null);
+  // const chart = useRef(null);
+
+  let date = props.dates;
+  let len = date.length;
+
+  const [cumulative, setCumlative] = useState(true);
+  const [timeSpan, setTimeSpan] = useState(len);
+  const [percentages, setPercentages] = useState({});
 
   useLayoutEffect(() => {
       am4core.options.autoSetClassName = true;
@@ -19,199 +28,217 @@ function Charts(props) {
 
       chart.colors.step = 2;
       chart.maskBullets = false;
-      
-      // Add data
-      chart.data = [{
-          "date": "2012-01-01",
-          "distance": 227,
-          "townName": "New York",
-          "townName2": "New York",
-          "townSize": 12,
-          "latitude": 40.71,
-          "duration": 408
-      }, {
-          "date": "2012-01-02",
-          "distance": 371,
-          "townName": "Washington",
-          "townSize": 7,
-          "latitude": 38.89,
-          "duration": 482
-      }, {
-          "date": "2012-01-03",
-          "distance": 433,
-          "townName": "Wilmington",
-          "townSize": 3,
-          "latitude": 34.22,
-          "duration": 562
-      }, {
-          "date": "2012-01-04",
-          "distance": 345,
-          "townName": "Jacksonville",
-          "townSize": 3.5,
-          "latitude": 30.35,
-          "duration": 379
-      }, {
-          "date": "2012-01-05",
-          "distance": 480,
-          "townName": "Miami",
-          "townName2": "Miami",
-          "townSize": 5,
-          "latitude": 25.83,
-          "duration": 501
-      }, {
-          "date": "2012-01-06",
-          "distance": 386,
-          "townName": "Tallahassee",
-          "townSize": 3.5,
-          "latitude": 30.46,
-          "duration": 443
-      }, {
-          "date": "2012-01-07",
-          "distance": 348,
-          "townName": "New Orleans",
-          "townSize": 5,
-          "latitude": 29.94,
-          "duration": 405
-      }, {
-          "date": "2012-01-08",
-          "distance": 238,
-          "townName": "Houston",
-          "townName2": "Houston",
-          "townSize": 8,
-          "latitude": 29.76,
-          "duration": 309
-      }, {
-          "date": "2012-01-09",
-          "distance": 218,
-          "townName": "Dalas",
-          "townSize": 8,
-          "latitude": 32.8,
-          "duration": 287
-      }, {
-          "date": "2012-01-10",
-          "distance": 349,
-          "townName": "Oklahoma City",
-          "townSize": 5,
-          "latitude": 35.49,
-          "duration": 485
-      }, {
-          "date": "2012-01-11",
-          "distance": 603,
-          "townName": "Kansas City",
-          "townSize": 5,
-          "latitude": 39.1,
-          "duration": 890
-      }, {
-          "date": "2012-01-12",
-          "distance": 534,
-          "townName": "Denver",
-          "townName2": "Denver",
-          "townSize": 9,
-          "latitude": 39.74,
-          "duration": 810
-      }, {
-          "date": "2012-01-13",
-          "townName": "Salt Lake City",
-          "townSize": 6,
-          "distance": 425,
-          "duration": 670,
-          "latitude": 40.75,
-          "dashLength": 8,
-          "alpha": 0.4
-      }, {
-          "date": "2012-01-14",
-          "latitude": 36.1,
-          "duration": 470,
-          "townName": "Las Vegas",
-          "townName2": "Las Vegas"
-      }, {
-          "date": "2012-01-15"
-      }, {
-          "date": "2012-01-16"
-      }, {
-          "date": "2012-01-17"
-      }];
-      
-      // Create axes
+
+      let conf;
+      let death;
+      let rec;
+      let active;
+      let data = [];
+      if(props.data !== null) {
+          conf = props.data.confirmed;
+          death = props.data.death;
+          rec = props.data.recovery;
+          active = props.data.active;
+
+          if(cumulative) {
+          for( var i=len-timeSpan; i < len; i++) {
+              data.push({
+                  "conf": conf[i],
+                  "death": death[i],
+                  "rec": rec[i],
+                  "active": active[i],
+                  "date": date[i],
+              })
+          }
+        }
+        else {
+          for( var j=len-timeSpan+1; j < len; j++) {
+            data.push({
+                "conf": conf[j]-conf[j-1],
+                "death": death[j]-death[j-1],
+                "rec": rec[j]-rec[j-1],
+                "active": active[j]-active[j-1],
+                "date": date[j-1],
+            })
+        }
+        }
+          let confPer = ((conf[len-1] - conf[len-2])/conf[len-1])*100;
+          let deathPer = ((death[len-1] - death[len-2])/death[len-1])*100;
+          let activePer = ((active[len-1] - active[len-2])/active[len-1])*100;
+          let recPer = ((rec[len-1] - rec[len-2])/rec[len-1])*100;
+
+          setPercentages({
+            confPer,
+            deathPer,
+            activePer,
+            recPer,
+          });
+
+          console.log(percentages.confPer, percentages.deathPer, percentages.activePer, recPer)
+      }
+
+      chart.data = data;
+
+      //axes
       let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-      dateAxis.dataFields.category = "category";
       dateAxis.renderer.grid.template.location = 0;
       dateAxis.renderer.minGridDistance = 50;
       dateAxis.renderer.grid.template.disabled = true;
       dateAxis.renderer.fullWidthTooltip = true;
+
+      let valueAxis = chart.yAxes.push( new am4charts.ValueAxis());
+      valueAxis.renderer.grid.disabled = true;
+      valueAxis.renderer.opposite = true;
+
+      if(cumulative) {
+      let confSeries = chart.series.push(new am4charts.LineSeries());
+      confSeries.id = 'g1';
+      confSeries.dataFields.valueY = "conf";
+      confSeries.dataFields.dateX = "date";
+      confSeries.strokeWidth = 2;
+      confSeries.stroke = am4core.color("#0e93e6");
+      confSeries.tooltipText = 'Confirmed: {valueY}';
+      confSeries.tooltip.getFillFromObject = false;
+      confSeries.tooltip.background.fill = am4core.color("#0e93e6");
+      confSeries.name = 'Confirmed';
+
+      let deathSeries = chart.series.push(new am4charts.LineSeries());
+      deathSeries.id = 'g2';
+      deathSeries.dataFields.valueY = "death";
+      deathSeries.dataFields.dateX = "date";
+      deathSeries.strokeWidth = 2;
+      deathSeries.stroke = am4core.color("#ff513d");
+      deathSeries.tooltipText = 'Deaths: {valueY}';
+      deathSeries.tooltip.getFillFromObject = false;
+      deathSeries.tooltip.background.fill = am4core.color("#ff513d");
+      deathSeries.name = 'Deaths'
+
+      let recSeries = chart.series.push(new am4charts.LineSeries());
+      recSeries.id = 'g3';
+      recSeries.dataFields.valueY = "rec";
+      recSeries.dataFields.dateX = "date";
+      recSeries.strokeWidth = 2;
+      recSeries.stroke = am4core.color("#2cba1c");
+      recSeries.tooltipText = 'Recoveries: {valueY}';
+      recSeries.tooltip.getFillFromObject = false;
+      recSeries.tooltip.background.fill = am4core.color("#2cba1c");
+      recSeries.name = 'Recoveries'
+
+      let activeSeries = chart.series.push(new am4charts.LineSeries());
+      activeSeries.id = 'g4';
+      activeSeries.dataFields.valueY = "active";
+      activeSeries.dataFields.dateX = "date";
+      activeSeries.strokeWidth = 2;
+      activeSeries.stroke = am4core.color("#dc5eff");
+      activeSeries.tooltipText = 'Active: {valueY}';
+      activeSeries.tooltip.getFillFromObject = false;
+      activeSeries.tooltip.background.fill = am4core.color("#dc5eff");
+      activeSeries.name = 'Active'
+
+      let confBullet = confSeries.bullets.push(new am4charts.Bullet());
+      let confRectangle = confBullet.createChild(am4core.Rectangle);
+      confBullet.horizontalCenter = "middle";
+      confBullet.verticalCenter = "middle";
+      confBullet.fill = am4core.color("#0e93e6");
+      confBullet.width = 3;
+      confBullet.height = 3;
+      confRectangle.width = 3;
+      confRectangle.height = 3;
       
-      let distanceAxis = chart.yAxes.push(new am4charts.ValueAxis());
-    //   distanceAxis.title.text = "Distance";
-      distanceAxis.renderer.grid.template.disabled = true;
+      let confState = confBullet.states.create("hover");
+      confState.properties.scale = 1.2;
+
+      let deathBullet = deathSeries.bullets.push(new am4charts.Bullet());
+      let deathRectangle = deathBullet.createChild(am4core.Rectangle);
+      deathBullet.horizontalCenter = "middle";
+      deathBullet.verticalCenter = "middle";
+      deathBullet.fill = am4core.color("#ff513d")
+      deathBullet.width = 3;
+      deathBullet.height = 3;
+      deathRectangle.width = 3;
+      deathRectangle.height = 3;
       
-      let durationAxis = chart.yAxes.push(new am4charts.DurationAxis());
-    //   durationAxis.title.text = "Duration";
-      durationAxis.baseUnit = "minute";
-      durationAxis.renderer.grid.template.disabled = true;
-      durationAxis.renderer.opposite = true;
+      let deathState = deathBullet.states.create("hover");
+      deathState.properties.scale = 1.2;
+
+      let recBullet = recSeries.bullets.push(new am4charts.Bullet());
+      let recRectangle = recBullet.createChild(am4core.Rectangle);
+      recBullet.horizontalCenter = "middle";
+      recBullet.verticalCenter = "middle";
+      recBullet.fill = am4core.color("#2cba1c");
+      recBullet.width = 3;
+      recBullet.height = 3;
+      recRectangle.width = 3;
+      recRectangle.height = 3;
       
-      durationAxis.durationFormatter.durationFormat = "hh'h' mm'min'";
+      let recState = recBullet.states.create("hover");
+      recState.properties.scale = 1.2;
+
+      let activeBullet = activeSeries.bullets.push(new am4charts.Bullet());
+      let activeRectangle = activeBullet.createChild(am4core.Rectangle);
+      activeBullet.horizontalCenter = "middle";
+      activeBullet.verticalCenter = "middle";
+      activeBullet.fill = am4core.color("#dc5eff");
+      activeBullet.width = 3;
+      activeBullet.height = 3;
+      activeRectangle.width = 3;
+      activeRectangle.height = 3;
       
-      let latitudeAxis = chart.yAxes.push(new am4charts.ValueAxis());
-      latitudeAxis.renderer.grid.template.disabled = true;
-      latitudeAxis.renderer.labels.template.disabled = true;
-      
-      // Create series
-      let distanceSeries = chart.series.push(new am4charts.ColumnSeries());
-      distanceSeries.id = "g1";
-      distanceSeries.dataFields.valueY = "distance";
-      distanceSeries.dataFields.dateX = "date";
-      distanceSeries.yAxis = distanceAxis;
-      distanceSeries.tooltipText = "{valueY} miles";
-      distanceSeries.name = "Distance";
-      distanceSeries.columns.template.fillOpacity = 0.7;
-      
-      let disatnceState = distanceSeries.columns.template.states.create("hover");
-      disatnceState.properties.fillOpacity = 0.9;
-      
-      let durationSeries = chart.series.push(new am4charts.LineSeries());
-      durationSeries.id = "g3";
-      durationSeries.dataFields.valueY = "duration";
-      durationSeries.dataFields.dateX = "date";
-      durationSeries.yAxis = durationAxis;
-      durationSeries.name = "Duration";
-      durationSeries.strokeWidth = 2;
-      durationSeries.tooltipText = "{valueY.formatDuration()}";
-      
-      let durationBullet = durationSeries.bullets.push(new am4charts.Bullet());
-      let durationRectangle = durationBullet.createChild(am4core.Rectangle);
-      durationBullet.horizontalCenter = "middle";
-      durationBullet.verticalCenter = "middle";
-      durationBullet.width = 7;
-      durationBullet.height = 7;
-      durationRectangle.width = 7;
-      durationRectangle.height = 7;
-      
-      let durationState = durationBullet.states.create("hover");
-      durationState.properties.scale = 1.2;
-      
-      let latitudeSeries = chart.series.push(new am4charts.LineSeries());
-      latitudeSeries.id = "g2";
-      latitudeSeries.dataFields.valueY = "latitude";
-      latitudeSeries.dataFields.dateX = "date";
-      latitudeSeries.yAxis = latitudeAxis;
-      latitudeSeries.name = "Latitude";
-      latitudeSeries.strokeWidth = 2;
-      latitudeSeries.tooltipText = "Latitude: {valueY} ({townName})";
-      
-      let latitudeBullet = latitudeSeries.bullets.push(new am4charts.CircleBullet());
-      latitudeBullet.circle.fill = am4core.color("#fff");
-      latitudeBullet.circle.strokeWidth = 2;
-      latitudeBullet.circle.propertyFields.radius = "townSize";
-      
-      let latitudeState = latitudeBullet.states.create("hover");
-      latitudeState.properties.scale = 1.2;
-      
-    //   let latitudeLabel = latitudeSeries.bullets.push(new am4charts.LabelBullet());
-    //   latitudeLabel.label.text = "{townName2}";
-    //   latitudeLabel.label.horizontalCenter = "left";
-    //   latitudeLabel.label.dx = 14;
-      
+      let activeState = activeBullet.states.create("hover");
+      activeState.properties.scale = 1.2;
+      }
+
+      else{
+        let confSeries = chart.series.push(new am4charts.ColumnSeries());
+        confSeries.id = 'g5';
+        confSeries.dataFields.valueY = "conf";
+        confSeries.dataFields.dateX = "date";
+        confSeries.strokeWidth = 0;
+        confSeries.fill = am4core.color("#0e93e6");
+        confSeries.tooltipText = 'Confirmed: {valueY}';
+        confSeries.tooltip.getFillFromObject = false;
+        confSeries.tooltip.background.fill = am4core.color("#0e93e6");
+        confSeries.name = 'Confirmed';
+        confSeries.columns.template.fillOpacity = 0.7;
+  
+        let deathSeries = chart.series.push(new am4charts.ColumnSeries());
+        deathSeries.id = 'g6';
+        deathSeries.dataFields.valueY = "death";
+        deathSeries.dataFields.dateX = "date";
+        deathSeries.strokeWidth = 0;
+        deathSeries.fill = am4core.color("#ff513d");
+        deathSeries.tooltipText = 'Deaths: {valueY}';
+        deathSeries.tooltip.getFillFromObject = false;
+        deathSeries.tooltip.background.fill = am4core.color("#ff513d");
+        deathSeries.name = 'Deaths'
+        deathSeries.columns.template.fillOpacity = 0.7;
+  
+        let recSeries = chart.series.push(new am4charts.ColumnSeries());
+        recSeries.id = 'g7';
+        recSeries.dataFields.valueY = "rec";
+        recSeries.dataFields.dateX = "date";
+        recSeries.strokeWidth = 0;
+        recSeries.fill = am4core.color("#2cba1c");
+        recSeries.tooltipText = 'Recoveries: {valueY}';
+        recSeries.tooltip.getFillFromObject = false;
+        recSeries.tooltip.background.fill = am4core.color("#2cba1c");
+        recSeries.name = 'Recoveries'
+        recSeries.columns.template.fillOpacity = 0.7;
+  
+        let activeSeries = chart.series.push(new am4charts.ColumnSeries());
+        activeSeries.id = 'g8';
+        activeSeries.dataFields.valueY = "active";
+        activeSeries.dataFields.dateX = "date";
+        activeSeries.strokeWidth = 0;
+        activeSeries.fill = am4core.color("#dc5eff");
+        activeSeries.tooltipText = 'Active: {valueY}';
+        activeSeries.tooltip.getFillFromObject = false;
+        activeSeries.tooltip.background.fill = am4core.color("#dc5eff");
+        activeSeries.name = 'Active'
+        activeSeries.columns.template.fillOpacity = 0.7;
+    
+      }
+
       // Add legend
       chart.legend = new am4charts.Legend();
       
@@ -226,10 +253,27 @@ function Charts(props) {
     return () => {
       chart.dispose();
     };
-  }, []);
+  }, [props.data, timeSpan, cumulative, date, len, percentages]);
 
   return (
-    <div id="chartdiv" style={{ width: "100%", height: "500px" }}></div>
+    <div style={{width: '100%'}}>
+      <div style={{display: 'flex'}}>
+  <div style={{backgroundColor: "rgba(14, 147, 230, 0.4)", border: "1px solid #0e93e6"}} className='percentage-block'>Confirmed <br/>{percentages.confPer>= 0? '+': ''}{round(percentages.confPer, 2)}%</div>
+  <div style={{backgroundColor: "rgba(255, 81, 61, 0.4)", border: "1px solid #ff513d"}} className='percentage-block'>Deaths <br/>{percentages.deathPer>= 0? '+': ''}{round(percentages.deathPer, 2)}%</div>
+  <div style={{backgroundColor: "rgba(44, 186, 28, 0.4)", border: "1px solid #2cba1c"}} className='percentage-block'>Recoveries <br/>{percentages.recPer>= 0? '+': ''}{round(percentages.recPer, 2)}%</div>
+  <div style={{backgroundColor: "rgba(220, 94, 255, 0.4)", border: "1px solid #dc5eff"}} className='percentage-block'>Active <br/>{percentages.activePer>= 0? '+': ''}{round(percentages.activePer, 2)}%</div>
+  <div style={{marginLeft: '1%'}}>
+        <div onClick={()=>setTimeSpan(7)} className='time-setter' style={{border: timeSpan === 7? "1px solid #fae19b": ""}}><div style={{width: '30px'}} className='percentage-block'>7</div>last week</div>
+        <div onClick={()=>setTimeSpan(30)} className='time-setter' style={{border: timeSpan === 30? "1px solid #fae19b": ""}}><div style={{width: '30px'}} className='percentage-block'>30</div>last month</div>
+        <div onClick={()=>setTimeSpan(len)} className='time-setter' style={{border: timeSpan === len? "1px solid #fae19b": ""}}><div style={{width: '30px'}} className='percentage-block'>{len}</div>all</div>
+      </div>
+      <div style={{marginLeft: '1%'}}>
+        <div onClick={()=>setCumlative(false)} className='time-setter' style={{border: !cumulative? "1px solid #fae19b": ""}}><div style={{width: '30px'}} className='percentage-block'><Bar/></div>Daily</div>
+        <div onClick={()=>setCumlative(true)} className='time-setter' style={{border: cumulative? "1px solid #fae19b": ""}}><div style={{width: '30px'}} className='percentage-block'><Curve/></div>Cumulative</div>
+      </div>
+      </div>
+    <div id="chartdiv" style={{width: "100%", height: props.height}}></div>
+    </div>
   );
 }
 
@@ -237,108 +281,94 @@ export default Charts;
 
 
 
-// Themes begin
-// am4core.useTheme(am4themes_animated);
-// Themes end
-
-
-
-// var countryCodes = ["AF", "AO", "AR", "AM", "AU", "AT", "AZ", "BD", "BY", "BE", "BO", "BA", "BW", "BR", "BG", "KH", "CM", "CA", "CF", "TD", "CL", "CN", "CO", "CG", "CD", "CR", "CI", "HR", "CU", "CY", "CZ", "DK", "EC", "EG", "ER", "EE", "ET", "FI", "FR", "GE", "DE", "GR", "GL", "GP", "GT", "GN", "GW", "GY", "HT", "HN", "HU", "IS", "IN", "ID", "IR", "IQ", "IE", "IL", "IT", "JM", "JP", "JO", "KZ", "KE", "KP", "KR", "KG", "LA", "LV", "LB", "LS", "LR", "LY", "LT", "LU", "MK", "MG", "MY", "ML", "MT", "MR", "MX", "MD", "MN", "ME", "MA", "MZ", "MM", "NA", "NP", "NL", "NZ", "NI", "NE", "NG", "NO", "OM", "PK", "PA", "PG", "PY", "PE", "PH", "PL", "PT", "RO", "RU", "SA", "SN", "RS", "SK", "SI", "SO", "ZA", "SS", "ES", "SD", "SE", "CH", "SY", "TW", "TJ", "TZ", "TH", "TN", "TR", "TM", "UA", "AE", "GB", "US", "UY", "UZ", "VE", "VN", "YE", "ZM", "ZW"];
-
-// var chart = am4core.create("chartdiv", am4maps.MapChart);
-
-
-// try {
-// 	chart.geodata = am4geodata_worldHigh;
-// }
-// catch (e) {
-// 	chart.raiseCriticalError(new Error("Map geodata could not be loaded. Please download the latest <a href=\"https://www.amcharts.com/download/download-v4/\">amcharts geodata</a> and extract its contents into the same directory as your amCharts files."));
-// }
-
-// chart.projection = new am4maps.projections.Mercator();
-// chart.padding(10, 20, 10, 20);
-// chart.minZoomLevel = 0.9;
-// chart.zoomLevel = 0.9;
-// chart.maxZoomLevel = 1;
-
-// var polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
-// polygonSeries.useGeodata = true;
-// polygonSeries.include = ["AF
-//                          "];
-
-
-// var chart1 = am4core.create("hiddenchartdiv", am4maps.MapChart);
-// chart1.padding(10, 20, 10, 20);
-// chart1.geodata = am4geodata_worldHigh;
-// chart1.projection = new am4maps.projections.Mercator();
-
-// var polygonSeries1 = chart1.series.push(new am4maps.MapPolygonSeries());
-// polygonSeries1.useGeodata = true;
-// polygonSeries1.include = ["AF"];
-
-
-// var label = chart.chartContainer.createChild(am4core.Label);
-// label.x = 100;
-// label.y = 100;
-// label.fill = am4core.color("#000000");
-// label.fontSize = 35;
-// label.fontWeight = "bold";
-// label.text = "Afghanistan";
-// label.fillOpacity = 0.2;
-
-// var slider = chart.createChild(am4core.Slider);
-// slider.padding(0, 15, 0, 60);
-// slider.background.padding(0, 15, 0, 60);
-// slider.marginBottom = 15;
-// slider.valign = "bottom";
-
-// var currentIndex = -1;
-// var colorset = new am4core.ColorSet();
-// var next;
-
-// setInterval(function () {
-// 	next = slider.start + 1 / countryCodes.length;
-// 	if (next >= 1) {
-// 		next = 0;
-// 	}
-// 	slider.animate({ property: "start", to: next }, 300);
-// }, 2000)
-
-// slider.events.on("rangechanged", function () {
-// 	changeCountry();
-// })
-
-// function changeCountry() {
-// 	var totalCountries = countryCodes.length - 1;
-// 	var countryIndex = Math.round(totalCountries * slider.start);
-
-// 	var morphToPolygon;
-
-// 	if (currentIndex != countryIndex) {
-// 		polygonSeries1.data = [];
-// 		polygonSeries1.include = [countryCodes[countryIndex]];
-
-// 		currentIndex = countryIndex;
-
-// 		polygonSeries1.events.once("validated", function () {
-
-// 			morphToPolygon = polygonSeries1.mapPolygons.getIndex(0);
-// 			if(morphToPolygon){
-// 				var countryPolygon = polygonSeries.mapPolygons.getIndex(0);
-
-// 				var morpher = countryPolygon.polygon.morpher;
-// 				var morphAnimation = morpher.morphToPolygon(morphToPolygon.polygon.points);
-
-// 				var colorAnimation = countryPolygon.animate({ "property": "fill", "to": colorset.getIndex(Math.round(Math.random() * 20)) }, 1000);
-
-// 				var animation = label.animate({ property: "y", to: 1000 }, 300);
-
-// 				animation.events.once("animationended", function () {
-// 					label.text = morphToPolygon.dataItem.dataContext["name"]+next;
-// 					label.y = -50;
-// 					label.animate({ property: "y", to: 200 }, 300, am4core.ease.quadOut);
-// 				})
-// 			}
-// 		})
-// 	}
-// }
+    //   // Create axes
+    //   let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+    //   dateAxis.dataFields.category = "category";
+    //   dateAxis.renderer.grid.template.location = 0;
+    //   dateAxis.renderer.minGridDistance = 50;
+    //   dateAxis.renderer.grid.template.disabled = true;
+    //   dateAxis.renderer.fullWidthTooltip = true;
+      
+    //   let distanceAxis = chart.yAxes.push(new am4charts.ValueAxis());
+    // //   distanceAxis.title.text = "Distance";
+    //   distanceAxis.renderer.grid.template.disabled = true;
+      
+    //   let durationAxis = chart.yAxes.push(new am4charts.DurationAxis());
+    // //   durationAxis.title.text = "Duration";
+    //   durationAxis.baseUnit = "minute";
+    //   durationAxis.renderer.grid.template.disabled = true;
+    //   durationAxis.renderer.opposite = true;
+      
+    //   durationAxis.durationFormatter.durationFormat = "hh'h' mm'min'";
+      
+    //   let latitudeAxis = chart.yAxes.push(new am4charts.ValueAxis());
+    //   latitudeAxis.renderer.grid.template.disabled = true;
+    //   latitudeAxis.renderer.labels.template.disabled = true;
+      
+    //   // Create series
+    //   let distanceSeries = chart.series.push(new am4charts.ColumnSeries());
+    //   distanceSeries.id = "g1";
+    //   distanceSeries.dataFields.valueY = "distance";
+    //   distanceSeries.dataFields.dateX = "date";
+    //   distanceSeries.yAxis = distanceAxis;
+    //   distanceSeries.fill = am4core.color('#ff513d')
+    //   distanceSeries.tooltipText = "{valueY} miles";
+    //   distanceSeries.name = "Distance";
+    //   distanceSeries.columns.template.fillOpacity = 0.7;
+      
+    //   let disatnceState = distanceSeries.columns.template.states.create("hover");
+    //   disatnceState.properties.fillOpacity = 0.9;
+      
+    //   let durationSeries = chart.series.push(new am4charts.LineSeries());
+    //   durationSeries.id = "g3";
+    //   durationSeries.dataFields.valueY = "duration";
+    //   durationSeries.dataFields.dateX = "date";
+    //   durationSeries.yAxis = durationAxis;
+    //   durationSeries.name = "Duration";
+    //   durationSeries.strokeWidth = 2;
+    //   durationSeries.tooltipText = "{valueY.formatDuration()}";
+      
+    //   let durationBullet = durationSeries.bullets.push(new am4charts.Bullet());
+    //   let durationRectangle = durationBullet.createChild(am4core.Rectangle);
+    //   durationBullet.horizontalCenter = "middle";
+    //   durationBullet.verticalCenter = "middle";
+    //   durationBullet.width = 7;
+    //   durationBullet.height = 7;
+    //   durationRectangle.width = 7;
+    //   durationRectangle.height = 7;
+      
+    //   let durationState = durationBullet.states.create("hover");
+    //   durationState.properties.scale = 1.2;
+      
+    //   let latitudeSeries = chart.series.push(new am4charts.LineSeries());
+    //   latitudeSeries.id = "g2";
+    //   latitudeSeries.dataFields.valueY = "latitude";
+    //   latitudeSeries.dataFields.dateX = "date";
+    //   latitudeSeries.yAxis = latitudeAxis;
+    //   latitudeSeries.name = "Latitude";
+    //   latitudeSeries.strokeWidth = 2;
+    //   latitudeSeries.tooltipText = "Latitude: {valueY} ({townName})";
+      
+    //   let latitudeBullet = latitudeSeries.bullets.push(new am4charts.CircleBullet());
+    //   latitudeBullet.circle.fill = am4core.color("#fff");
+    //   latitudeBullet.circle.strokeWidth = 2;
+    //   latitudeBullet.circle.propertyFields.radius = "townSize";
+      
+    //   let latitudeState = latitudeBullet.states.create("hover");
+    //   latitudeState.properties.scale = 1.2;
+      
+    // //   let latitudeLabel = latitudeSeries.bullets.push(new am4charts.LabelBullet());
+    // //   latitudeLabel.label.text = "{townName2}";
+    // //   latitudeLabel.label.horizontalCenter = "left";
+    // //   latitudeLabel.label.dx = 14;
+      
+    //   // Add legend
+    //   chart.legend = new am4charts.Legend();
+      
+    //   // Add cursor
+    //   chart.cursor = new am4charts.XYCursor();
+    //   chart.cursor.fullWidthLineX = true;
+    //   chart.cursor.xAxis = dateAxis;
+    //   chart.cursor.lineX.strokeOpacity = 0;
+    //   chart.cursor.lineX.fill = am4core.color("#000");
+    //   chart.cursor.lineX.fillOpacity = 0.1;
