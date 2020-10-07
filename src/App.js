@@ -5,6 +5,7 @@ import Settings from './components/Setting'
 import Home from './components/Home';
 import News  from './components/News';
 import DetailNews from './components/DetailNews';
+import Footer from './components/Footer';
 
 function App() {
   var topNews = [];
@@ -40,6 +41,7 @@ function App() {
           <Route path='/news/india/:id' component={() => <DetailNews displayIndiaNews={displayIndiaNews}/>}></Route>
         </Switch>
       </BrowserRouter>
+      <Footer/>
     </div>
   );
 }

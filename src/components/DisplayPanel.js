@@ -23,20 +23,14 @@ class DisplayPanel extends Component {
                 fetch("/api/data/"+this.props.country).then(res => {
                     return res.json()
                 }).then(data => {
-                    // console.log(data.confirmed[data.confirmed.length - 1]);
-                    // console.log(data.confirmed[data.confirmed.length - 2]);
-                    this.updateData(data);
+                    console.log(data);
+                    this.setState({data: data});
                     // this.props.fetchCallback(data);
                 }).catch(err => {
                     console.log(err);
                 })
                 }
     }
-    }
-
-    updateData = (data) => {
-        console.log(data);
-        this.setState({data: data});
     }
 
     empty() {
@@ -138,7 +132,7 @@ class DisplayPanel extends Component {
     render() {
         return (
             <div id='displayPanel' style={{top: 80, right: 0, width: this.state.width, height: this.state.height}}>
-                {this.props.country == null? this.empty() : this.state.data == null? this.display(false): this.state.data.detail === 'Not found.'? this.noData() : this.display(true)}
+                {this.props.country == null? this.empty() : this.state.data == null? this.display(false): this.state.data.country == null? this.noData() : this.display(true)}
             </div>
         )
     }

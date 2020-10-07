@@ -18,7 +18,7 @@ function Charts(props) {
   let len = date.length;
 
   const [cumulative, setCumlative] = useState(true);
-  const [timeSpan, setTimeSpan] = useState(len);
+  const [timeSpan, setTimeSpan] = useState(7);
   const [percentages, setPercentages] = useState({});
   // const percentages = {};
 
@@ -63,20 +63,24 @@ function Charts(props) {
             })
         }
         }
-        console.log(percentages);
-        if(percentages === {}) {
+        console.log("TEsting", Object.keys(percentages).length === 0)
+        if(Object.keys(percentages).length === 0 || percentages.confPer != ((conf[len-1] - conf[len-2])/conf[len-2])*100) {
           console.log('executing');
-          let confPer = ((conf[len-1] - conf[len-2])/conf[len-1])*100;
-          let deathPer = ((death[len-1] - death[len-2])/death[len-1])*100;
-          let activePer = ((active[len-1] - active[len-2])/active[len-1])*100;
-          let recPer = ((rec[len-1] - rec[len-2])/rec[len-1])*100;
+          let confPer = ((conf[len-1] - conf[len-2])/conf[len-2])*100;
+          let deathPer = ((death[len-1] - death[len-2])/death[len-2])*100;
+          let activePer = ((active[len-1] - active[len-2])/active[len-2])*100;
+          let recPer = ((rec[len-1] - rec[len-2])/rec[len-2])*100;
 
           setPercentages({
             confPer,
             deathPer,
             activePer,
             recPer,
-          });}
+          });
+          console.log(percentages);
+        }
+
+
 
           // percentages = { confPer, deathPer, activePer, recPer};
       }
