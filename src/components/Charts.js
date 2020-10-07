@@ -20,6 +20,7 @@ function Charts(props) {
   const [cumulative, setCumlative] = useState(true);
   const [timeSpan, setTimeSpan] = useState(len);
   const [percentages, setPercentages] = useState({});
+  // const percentages = {};
 
   useLayoutEffect(() => {
       am4core.options.autoSetClassName = true;
@@ -62,6 +63,9 @@ function Charts(props) {
             })
         }
         }
+        console.log(percentages);
+        if(percentages === {}) {
+          console.log('executing');
           let confPer = ((conf[len-1] - conf[len-2])/conf[len-1])*100;
           let deathPer = ((death[len-1] - death[len-2])/death[len-1])*100;
           let activePer = ((active[len-1] - active[len-2])/active[len-1])*100;
@@ -72,9 +76,9 @@ function Charts(props) {
             deathPer,
             activePer,
             recPer,
-          });
+          });}
 
-          console.log(percentages.confPer, percentages.deathPer, percentages.activePer, recPer)
+          // percentages = { confPer, deathPer, activePer, recPer};
       }
 
       chart.data = data;

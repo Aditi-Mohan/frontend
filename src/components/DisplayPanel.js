@@ -18,21 +18,25 @@ class DisplayPanel extends Component {
             this.setState({width: this.props.width, height: this.props.height});
         }
         if( this.props.country !== null ) {
-        if( prevProps.country !== this.props.country ) {
-            fetch("/api/data/"+this.props.country).then(res => {
-                return res.json()
-            }).then(data => {
-                // console.log(data.confirmed[data.confirmed.length - 1]);
-                // console.log(data.confirmed[data.confirmed.length - 2]);
-                this.setState({
-                    data,
-                });
-                // this.props.fetchCallback(data);
-            }).catch(err => {
-                console.log(err);
-            })
-            }
+            if( prevProps.country !== this.props.country ) {
+                console.log("/api/data/"+this.props.country);
+                fetch("/api/data/"+this.props.country).then(res => {
+                    return res.json()
+                }).then(data => {
+                    // console.log(data.confirmed[data.confirmed.length - 1]);
+                    // console.log(data.confirmed[data.confirmed.length - 2]);
+                    this.updateData(data);
+                    // this.props.fetchCallback(data);
+                }).catch(err => {
+                    console.log(err);
+                })
+                }
     }
+    }
+
+    updateData = (data) => {
+        console.log(data);
+        this.setState({data: data});
     }
 
     empty() {

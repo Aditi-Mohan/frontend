@@ -171,7 +171,7 @@ class Top5 extends Component {
                     )}
                 </table>
                 </div>
-                <div id="chartdiv" style={{marginLeft: '10%', width: '90%'}}></div>
+                <div id="chartdiv" style={{marginLeft: '10%', width: '90%', height: '500px'}}></div>
                 {/* <div id="hiddenchartdiv" style={{marginLeft: '10%', width: '90%'}}></div> */}
             </div>
         )

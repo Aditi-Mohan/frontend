@@ -53,13 +53,13 @@ class Messages extends Component {
             var block = [];
             for(var keys in images) {
                 if( j === 3) {
-                    block.push(<div><img width='300px' height='200px' src={images[keys]} alt={keys}></img></div>);
+                    block.push(<div key={Math.random()}><img width='300px' height='200px' src={images[keys]} alt={keys}></img></div>);
                     remarks.push(block);
                     j=1;
                     block=[];
                 }
                 else {
-                    block.push(<div><img width='300px' height='200px' src={images[keys]} alt={keys}></img></div>);
+                    block.push(<div key={Math.random()}><img width='300px' height='200px' src={images[keys]} alt={keys}></img></div>);
                     j++;
                 }
             }
@@ -69,7 +69,7 @@ class Messages extends Component {
 
     addRemark(newRemark, color) {
         var len = this.state.remarks.length;
-        newRemark = <div style={{width: '300px', height: '200px'}} dangerouslySetInnerHTML={{__html: newRemark}}></div>
+        newRemark = <div key={Math.random()} style={{width: '300px', height: '200px'}} dangerouslySetInnerHTML={{__html: newRemark}}></div>
         if(color) {
             newRemark.props.style.backgroundColor = color;
         }
