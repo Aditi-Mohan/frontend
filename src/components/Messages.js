@@ -120,6 +120,7 @@ class Messages extends Component {
                     </HorizontalScroll>
                 </div>
                 {this.state.popup && this.showPopUp()}
+                <div dangerouslySetInnerHTML={{__html: ''}}></div>
             </div>
         )
     }

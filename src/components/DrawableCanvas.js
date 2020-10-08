@@ -692,6 +692,7 @@ class DrawableCanvas extends React.Component {
           newRemark.style.backgroundColor = document.getElementById('drawable-canvas').style.backgroundColor;
           newRemark.style.width = 300;
           newRemark.style.height = 200;
+          console.log(newRemark.outerHTML);
           this.props.saveFunction(newRemark.outerHTML);
         }
         else{

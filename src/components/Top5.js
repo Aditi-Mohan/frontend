@@ -147,8 +147,9 @@ class Top5 extends Component {
     render() {
         return(
             <div style={{display: 'flex', width: '100%'}} className='top5-table'>
-                <div>
+                <div style={{paddingLeft: '1%'}}>
                 <table>
+                    <thead>
                     <tr>
                         <th>Country</th>
                         <th>Rank</th>
@@ -158,6 +159,8 @@ class Top5 extends Component {
                         <th>Recoveries</th>
                         <th>New Cases</th>
                     </tr>
+                    </thead>
+                    <tbody>
                     {this.state.data.map((item, index)=> 
                         <tr key={index} style={{backgroundColor: this.state.countryCodes? this.state.countryCodes[index] === this.state.countryCodes[this.state.currentIndex]? "rgba(14, 147, 230, 0.4)": "": "", border: this.state.countryCodes? this.state.countryCodes[index] === this.state.countryCodes[this.state.currentIndex]? "1px solid #0e93e6":"":""}}>
                             <td>{item.country}</td>
@@ -169,6 +172,7 @@ class Top5 extends Component {
                             <td>{item.confirmed[item.confirmed.length-1]-item.confirmed[item.confirmed.length-2]}</td>
                         </tr>
                     )}
+                    </tbody>
                 </table>
                 </div>
                 <div id="chartdiv" style={{marginLeft: '10%', width: '90%', height: '500px'}}></div>

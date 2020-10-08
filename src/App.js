@@ -21,11 +21,12 @@ function App() {
   }
 
   const displayTopNews = (id) => {
+    // console.log(topNews[id]);
     return topNews[id];
   }
 
   const displayIndiaNews = (id) => {
-    console.log(indiaNews);
+    // console.log(indiaNews[id]);
     return indiaNews[id];
   }
 
@@ -37,8 +38,8 @@ function App() {
           <Route exact path='/' component={()=><Home getNews={getNews} />}></Route>
           <Route path='/settings' component={Settings}/>
           <Route exact path='/news' component={News}/>
+          <Route path='/news/india/:id' component={() => <DetailNews india={true} displayTopNews={null} displayIndiaNews={displayIndiaNews}/>}></Route>
           <Route path='/news/:id' component={()=><DetailNews displayTopNews={displayTopNews}/>}></Route>
-          <Route path='/news/india/:id' component={() => <DetailNews displayIndiaNews={displayIndiaNews}/>}></Route>
         </Switch>
       </BrowserRouter>
       <Footer/>

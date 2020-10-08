@@ -17,7 +17,7 @@ function Footer(props) {
     }, [window.innerWidth]);
 
     return(
-        <div className='my-navbar' style={{display: 'flex', paddingLeft: '37%', height: 79}}>
+        <div className='my-navbar' style={{display: 'flex', paddingLeft: '37%', height: 79, bottom: 0, width: '100%'}}>
             <li data-tip data-for='github' className='nav-item' style={{float: 'left'}}>
                 <div className='my-icon-button'><Github/></div>
                 <ReactStyledTooltip id='github' place='top' effect='solid'>
