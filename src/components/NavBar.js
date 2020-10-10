@@ -28,7 +28,7 @@ class NavBar extends Component {
             titleWidth: 140.91,
             liWidth: 64,
             navItems: [
-                {id: 'contact', tooltipContent: 'Leave a Message', icon: <MessengerIcon/>},
+                {id: 'messages', tooltipContent: 'Leave a Message', icon: <MessengerIcon/>},
                 {id: 'news', tooltipContent: 'News', icon:<BoltIcon/>},
                 {id: 'stats', tooltipContent: 'Statistics', icon: <ChartIcon/>},
                 {id: 'settings', tooltipContent: 'About Me', icon: <UserIcon/>}
@@ -80,6 +80,7 @@ class NavBar extends Component {
         return(
             <nav className='my-navbar'>
                 <Link data-tip data-for='home' to='/' className='left brand-logo' style={{paddingLeft: '2rem', paddingBottom: '1rem'}}>COVIZ</Link>
+                <p className='desc' style={{marginLeft: '2rem', paddingTop: '1rem'}}>World COVID-19 Data Visualized</p>
                 <ReactStyledTooltip id='home' place='bottom' effect='solid'><div>Home</div></ReactStyledTooltip>
                 <ul className='right navbar-nav'>
                     {listOfNavItems}

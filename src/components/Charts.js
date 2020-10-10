@@ -64,7 +64,7 @@ function Charts(props) {
         }
         }
         console.log("TEsting", Object.keys(percentages).length === 0)
-        if(Object.keys(percentages).length === 0 || percentages.confPer != ((conf[len-1] - conf[len-2])/conf[len-2])*100) {
+        if(Object.keys(percentages).length === 0) {
           console.log('executing');
           let confPer = ((conf[len-1] - conf[len-2])/conf[len-2])*100;
           let deathPer = ((death[len-1] - death[len-2])/death[len-2])*100;

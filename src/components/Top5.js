@@ -20,6 +20,7 @@ class Top5 extends Component {
             contryCodes: [],
             codes:isoCountries,
             data: [],
+            percentages: [],
         }
         this.setCurr = this.setCurr.bind(this);
     }
@@ -32,11 +33,41 @@ class Top5 extends Component {
         }
     }
 
+    getPercentages(data) {
+
+        let percentages = [];
+
+        function calculatePercentage(conf, death, active, rec) {
+            // console.log(conf);
+            let len = conf.length;
+            let confPer = ((conf[len-1] - conf[len-2])/conf[len-2])*100;
+            let deathPer = ((death[len-1] - death[len-2])/death[len-2])*100;
+            let activePer = ((active[len-1] - active[len-2])/active[len-2])*100;
+            let recPer = ((rec[len-1] - rec[len-2])/rec[len-2])*100;
+            return {
+                confPer,
+                deathPer,
+                activePer,
+                recPer,
+            }
+        }
+
+        for(var i=0; i<data.length; i++) {
+            percentages.push(calculatePercentage(data[i].confirmed, data[i].death, data[i].active, data[i].recovery))
+        }
+
+        console.log(percentages);
+        return percentages;
+    }
+
     componentDidMount() {
-        fetch('api/top5').then(res => res.json()).then(res => this.setState({data:res,})).then(res => {
+        fetch('api/top5').then(res => res.json()).then(res => {
+            let percentages = this.getPercentages(res);
+            this.setState({data:res, percentages: percentages,})
+            }).then(res => {
             let countryCodes = this.state.data.map(item => this.getCountryCode(item.country));
             this.setState({countryCodes});
-        }).then(res => this.makeChart()).then(res => {this.setState({clickHandler: res}); console.log(res)});
+        }).then(res => this.makeChart()).then(res => {this.setState({clickHandler: res});});
     }
 
     setCurr(newIndex) {
@@ -157,7 +188,7 @@ class Top5 extends Component {
                         <th>Deaths</th>
                         <th>Active</th>
                         <th>Recoveries</th>
-                        <th>New Cases</th>
+                        <th style={{whiteSpace: 'nowrap'}}>New Cases</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -174,6 +205,14 @@ class Top5 extends Component {
                     )}
                     </tbody>
                 </table>
+                { this.state.percentages.length !== 0 && this.state.currentIndex !== -1 ?
+                <div style={{justifyContent: 'center', display: 'flex'}}>
+                        <div style={{backgroundColor: "rgba(14, 147, 230, 0.4)", border: "1px solid #0e93e6"}} className='percentage-block'>Confirmed <br/>{this.state.percentages[this.state.currentIndex].confPer>= 0? '+': ''}{Math.round(this.state.percentages[this.state.currentIndex].confPer, 2)}%</div>
+                        <div style={{backgroundColor: "rgba(255, 81, 61, 0.4)", border: "1px solid #ff513d"}} className='percentage-block'>Deaths <br/>{this.state.percentages[this.state.currentIndex].deathPer>= 0? '+': ''}{Math.round(this.state.percentages[this.state.currentIndex].deathPer, 2)}%</div>
+                        <div style={{backgroundColor: "rgba(44, 186, 28, 0.4)", border: "1px solid #2cba1c"}} className='percentage-block'>Recoveries <br/>{this.state.percentages[this.state.currentIndex].recPer>= 0? '+': ''}{Math.round(this.state.percentages[this.state.currentIndex].recPer, 2)}%</div>
+                        <div style={{backgroundColor: "rgba(220, 94, 255, 0.4)", border: "1px solid #dc5eff"}} className='percentage-block'>Active <br/>{this.state.percentages[this.state.currentIndex].activePer>= 0? '+': ''}{Math.round(this.state.percentages[this.state.currentIndex].activePer, 2)}%</div>
+                </div>
+                : <div></div>}
                 </div>
                 <div id="chartdiv" style={{marginLeft: '10%', width: '90%', height: '500px'}}></div>
                 {/* <div id="hiddenchartdiv" style={{marginLeft: '10%', width: '90%'}}></div> */}

@@ -6,40 +6,25 @@ import Home from './components/Home';
 import News  from './components/News';
 import DetailNews from './components/DetailNews';
 import Footer from './components/Footer';
+import Messages from './components/Messages';
 
 function App() {
-  var topNews = [];
-  var indiaNews = [];
 
   useEffect(() => {
     fetch('/countrydata').then(console.log('success'));
   });
-
-  const getNews = (top, india) =>{
-    topNews = top;
-    indiaNews = india;
-  }
-
-  const displayTopNews = (id) => {
-    // console.log(topNews[id]);
-    return topNews[id];
-  }
-
-  const displayIndiaNews = (id) => {
-    // console.log(indiaNews[id]);
-    return indiaNews[id];
-  }
 
   return (
     <div className="App">
       <BrowserRouter>
         <NavBar/>
         <Switch>
-          <Route exact path='/' component={()=><Home getNews={getNews} />}></Route>
+          <Route exact path='/' component={Home}></Route>
           <Route path='/settings' component={Settings}/>
+          <Route path='/messages' component={Messages} />
           <Route exact path='/news' component={News}/>
-          <Route path='/news/india/:id' component={() => <DetailNews india={true} displayTopNews={null} displayIndiaNews={displayIndiaNews}/>}></Route>
-          <Route path='/news/:id' component={()=><DetailNews displayTopNews={displayTopNews}/>}></Route>
+          <Route path='/news/india/:id' component={() => <DetailNews india={true} />}></Route>
+          <Route path='/news/:id' component={()=><DetailNews />}></Route>
         </Switch>
       </BrowserRouter>
       <Footer/>

@@ -12,6 +12,7 @@ class Messages extends Component {
         this.state = {
             popup: false,
             remarks,
+            width: window.innerWidth,
         }
         this.updateDimensions = this.updateDimensions.bind(this);
         this.togglePopup = this.togglePopup.bind(this);

@@ -26,6 +26,10 @@ Link {
     position: absolute;
 }
 
+.desc {
+    position: absolute;
+}
+
 .my-navbar {
     height: var(--nav-size);
     background-color: var(--bg);

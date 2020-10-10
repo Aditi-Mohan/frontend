@@ -17,7 +17,9 @@ class DisplayPanel extends Component {
         if( (prevProps.width !== this.props.width) || (prevProps.height !== this.props.height)) {
             this.setState({width: this.props.width, height: this.props.height});
         }
+        console.log(this.props.country !== null);
         if( this.props.country !== null ) {
+            console.log(prevProps.country !== this.props.country);
             if( prevProps.country !== this.props.country ) {
                 console.log("/api/data/"+this.props.country);
                 fetch("/api/data/"+this.props.country).then(res => {
@@ -131,7 +133,7 @@ class DisplayPanel extends Component {
 
     render() {
         return (
-            <div id='displayPanel' style={{top: 80, right: 0, width: this.state.width, height: this.state.height}}>
+            <div id='displayPanel' style={{top: 80, right: 0, width: this.state.width, height: this.state.height+10}}>
                 {this.props.country == null? this.empty() : this.state.data == null? this.display(false): this.state.data.country == null? this.noData() : this.display(true)}
             </div>
         )

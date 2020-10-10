@@ -18,25 +18,25 @@ function Footer(props) {
 
     return(
         <div className='my-navbar' style={{display: 'flex', paddingLeft: '37%', height: 79, bottom: 0, width: '100%'}}>
-            <li data-tip data-for='github' className='nav-item' style={{float: 'left'}}>
+            <li data-tip data-for='github' className='nav-item' style={{float: 'left', cursor: 'pointer'}}>
                 <div className='my-icon-button'><Github/></div>
                 <ReactStyledTooltip id='github' place='top' effect='solid'>
                     <div>Github</div>
                 </ReactStyledTooltip>
             </li>
-            <li data-tip data-for='linkedin' className='nav-item' style={{float: 'left'}}>
+            <li data-tip data-for='linkedin' className='nav-item' style={{float: 'left', cursor: 'pointer'}}>
                 <div className='my-icon-button'><LinkedIn/></div>
                 <ReactStyledTooltip id='linkedin' place='top' effect='solid'>
                     <div>LinkedIn</div>
                 </ReactStyledTooltip>
             </li>
-            <li data-tip data-for='kaggle' className='nav-item' style={{float: 'left'}}>
+            <li data-tip data-for='kaggle' className='nav-item' style={{float: 'left', cursor: 'pointer'}}>
                 <div className='my-icon-button'><Kaggle/></div>
                 <ReactStyledTooltip id='kaggle' place='top' effect='solid'>
                     <div>Kaggle</div>
                 </ReactStyledTooltip>
             </li>
-            <li data-tip data-for='patreon' className='nav-item' style={{float: 'left'}}>
+            <li data-tip data-for='patreon' className='nav-item' style={{float: 'left', cursor: 'pointer'}}>
                 <div className='my-icon-button'><Coffee/></div>
                 <ReactStyledTooltip id='patreon' place='top' effect='solid'>
                     <div>Buy Me a Coffee</div>
