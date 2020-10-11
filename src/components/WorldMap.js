@@ -21,8 +21,15 @@ class WorldMap extends Component {
         this.updateDimensions = this.updateDimensions.bind(this);
         this.props.updateDimensionsCallback(this.state.width, this.state.height, this.state.displayWidth, this.state.displayHeight);
     }
+
+    componentDidUpdate(prevProps) {
+        if(this.props.selected !== null && prevProps.selected !== this.props.selected) {
+            this.searchHandler(this.props.selected);
+        }
+    }
     
     componentDidMount() {
+        console.log('kskdjd')
         window.addEventListener('resize', this.updateDimensions)
     }
 
@@ -101,6 +108,51 @@ class WorldMap extends Component {
         })
         var country = e.target.getAttribute('title');
         this.props.clickCallback(e.target.id, country, width, displayWidth);
+    }
+
+    searchHandler = (id) => {
+        const element = document.getElementById(id);
+        let width = window.innerWidth - 830 < 350? 350: window.innerWidth - 830;
+        let displayWidth = window.innerWidth - width - 17;
+        this.setState({
+            width,
+            displayWidth,
+        })
+
+        const d = element.getAttribute('d').toString().split(' ').filter(item => {return !(/^[A-Z]$/i.test(item))});
+        const start_x = Number(d[0].slice(0,d[0].indexOf(',')))
+        const start_y = Number(d[0].slice(d[0].indexOf(',')+1))
+
+        let next_point_x = start_x;
+        let next_point_y = start_y;
+        var min_x = next_point_x;
+        var min_y = next_point_y;
+        var max_x = next_point_x;
+        var max_y = next_point_y;
+
+        for(let i = 1; i< d.length; i++) {
+            let x = Number(d[i].slice(0,d[i].indexOf(',')))
+            let y = Number(d[i].slice(d[i].indexOf(',')+1))
+            next_point_x += x;
+            next_point_y += y;
+            if( next_point_x < min_x) {
+                min_x = next_point_x
+            }
+            if( next_point_y < min_y) {
+                min_y = next_point_y
+            }
+            if( next_point_x > max_x) {
+                max_x = next_point_x
+            }
+            if( next_point_y > max_y ) {
+                max_y = next_point_y
+            }
+        }
+        this.setState({
+            viewBox: Math.round(min_x-6)+' '+Math.round(min_y-6)+' '+Math.round(max_x-min_x+12)+' '+Math.round(max_y-min_y+12),
+        })
+        var country = element.getAttribute('title');
+        this.props.clickCallback(element.id, country, width, displayWidth);
     }
 
     resetViewBox = (e) => {

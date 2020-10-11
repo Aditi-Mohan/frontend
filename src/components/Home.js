@@ -23,7 +23,7 @@ class Home extends Component{
             displayHeight: null,
         }
         this.clickCallback = this.clickCallback.bind(this);
-        this.fetchCallback = this.fetchCallback.bind(this);
+        this.searchCallback = this.searchCallback.bind(this);
         this.updateDimensionsCallback = this.updateDimensionsCallback.bind(this);
         this.getDate = this.getDate.bind(this);
     }
@@ -55,9 +55,9 @@ class Home extends Component{
         })
     }
 
-    fetchCallback(data) {
+    searchCallback(id) {
         this.setState({
-            data,
+            selected: id,
         })
     }
 
@@ -76,10 +76,10 @@ class Home extends Component{
         <WorldMap selected={this.state.selected}
             updateDimensionsCallback={this.updateDimensionsCallback}
             clickCallback={this.clickCallback}/>
-        <DisplayPanel dates={this.state.dateArray} width={this.state.displayWidth} country={this.state.countryName} height={this.state.displayHeight} fetchCallback={this.fetchCallback}/>
+        <DisplayPanel dates={this.state.dateArray} width={this.state.displayWidth} country={this.state.countryName} height={this.state.displayHeight} searchFunction={this.searchCallback}/>
         <Top5/>
-        <TopNews getNews={this.props.getNews}/>
-        <Messages/>
+        <TopNews/>
+        <Messages searched={this.state.searched}/>
         </div>
     )
 }
