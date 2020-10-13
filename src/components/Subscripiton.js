@@ -330,9 +330,42 @@ function AutoComplete() {
     setWatchList([...watchList, newCountry]);
   }
 
-  const subscribe = (e) => {
-    console.log(watchList, top5, email);
-    //post to database
+  const getuid = async () => {
+    var result;
+    await fetch("api/subscriber/").then(async res => await res.json()).then(res => result=res)
+    return result;
+  }
+
+  const subscribe = async (e) => {
+    function getRndInteger() {
+      return Math.floor(Math.random() * (1000000 - 0 + 1) ) + 0;
+    }
+
+    function processWatchlist(arr) {
+      var str = ''
+      for (var i=0; i<arr.length-1; i++ ) {
+        str += arr[i] + '%'
+      }
+      str += arr[arr.length-1];
+      return str;
+    }
+
+    fetch("api/subscriber/", { 
+    // Adding method type 
+    method: "POST", 
+    // Adding body or contents to send 
+    body: JSON.stringify({ 
+      uid: getRndInteger(),
+      email: email,
+      watchlist: processWatchlist(watchList),
+      top5: top5
+    }), 
+    // Adding headers to the request 
+    headers: { 
+        "Content-type": "application/json;"
+    } 
+    }).then(response => response.json()).then(json => console.log(json)); // Displaying results to console 
+
   }
 
   return (
@@ -381,7 +414,7 @@ function AutoComplete() {
           </div>
         </div>
         </div>
-        <button onClick={subscribe}
+        <button disabled={!verified} onClick={subscribe}
           style={{ marginTop: '10%', marginLeft: '40%', 
           marginBottom: '20px' , width: '200px', height: '30px', 
           backgroundColor: '#fae19b', color: '#242526', 
