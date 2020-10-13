@@ -7,6 +7,7 @@ import News  from './components/News';
 import DetailNews from './components/DetailNews';
 import Footer from './components/Footer';
 import Messages from './components/Messages';
+import Autocomplete from './components/Subscripiton';
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
           <Route path='/settings' component={Settings}/>
           <Route path='/messages' component={Messages} />
           <Route exact path='/news' component={News}/>
+          <Route path='/subscribe' component={Autocomplete}/>
           <Route path='/news/india/:id' component={() => <DetailNews india={true} />}></Route>
           <Route path='/news/:id' component={()=><DetailNews />}></Route>
         </Switch>

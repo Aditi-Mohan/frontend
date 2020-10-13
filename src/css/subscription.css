@@ -1,0 +1,100 @@
+.email-field {
+    margin: 10px;
+    padding: 10px;
+    display: flex;
+}
+button {
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    /* width: 100px; */
+    height: 30px;
+    background-color: #242526;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px 0 #484a4d;
+    transition: all 300ms;
+    color: #dadce1;
+}
+
+button:disabled {
+    border: none;
+    background-color: #757679;
+}
+
+button:hover {
+    box-shadow: 0 1px 5px 0 #484a4d;
+    transform: scale(1.02);
+}
+
+button:focus {
+    border: none;
+    background-color: #242526;
+}
+
+.watchlist-header {
+    width: 100%;
+    font-weight: 700;
+    font-size: large;
+    border: 1px solid #757679;
+    background-color: #242526;
+    color: #dadce1;
+    padding: 15px;
+    border-radius: 5px 5px 0 0 ;
+}
+
+.watchlist-item {
+    width: 100%;
+    border: 1px solid #757679;
+    color: #242526;
+    padding: 15px;
+}
+
+.boxes {
+    margin: auto;
+    padding: 50px;
+    background: #484848;
+  }
+  
+  /*Checkboxes styles*/
+  input[type="checkbox"] { display: none; }
+  
+  input[type="checkbox"] + label {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 20px;
+    font: 14px/20px 'Open Sans', Arial, sans-serif;
+    color: #ddd;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+  
+  input[type="checkbox"] + label:last-child { margin-bottom: 0; }
+  
+  input[type="checkbox"] + label:before {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 30px;
+    border: 3px solid #242526;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: .6;
+    -webkit-transition: all .12s, border-color .08s;
+    transition: all .12s, border-color .08s;
+  }
+  
+  input[type="checkbox"]:checked + label:before {
+    width: 10px;
+    top: -5px;
+    left: 5px;
+    border-radius: 0;
+    opacity: 1;
+    border-top-color: transparent;
+    border-left-color: transparent;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }

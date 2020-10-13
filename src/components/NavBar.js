@@ -9,7 +9,7 @@ import { ReactComponent as CogIcon } from '../svgs/icons/cog.svg';
 import { ReactComponent as ChevronIcon } from '../svgs/icons/chevron.svg';
 import { ReactComponent as BoltIcon } from '../svgs/icons/bolt.svg';
 import { ReactComponent as BellIcon } from '../svgs/icons/bell.svg';
-import { ReactComponent as ChartIcon } from '../svgs/icons/chart.svg';
+import { ReactComponent as SubIcon } from '../svgs/icons/subscription.svg';
 import { ReactComponent as UserIcon } from '../svgs/icons/user.svg';
 import { ReactComponent as EditIcon } from '../svgs/icons/pencil.svg';
 import { ReactComponent as LoginIcon } from '../svgs/icons/login.svg';
@@ -30,7 +30,7 @@ class NavBar extends Component {
             navItems: [
                 {id: 'messages', tooltipContent: 'Leave a Message', icon: <MessengerIcon/>},
                 {id: 'news', tooltipContent: 'News', icon:<BoltIcon/>},
-                {id: 'stats', tooltipContent: 'Statistics', icon: <ChartIcon/>},
+                {id: 'subscribe', tooltipContent: 'Subscribe', icon: <SubIcon/>},
                 {id: 'settings', tooltipContent: 'About Me', icon: <UserIcon/>}
             ]
         }
@@ -80,7 +80,7 @@ class NavBar extends Component {
         return(
             <nav className='my-navbar'>
                 <Link data-tip data-for='home' to='/' className='left brand-logo' style={{paddingLeft: '2rem', paddingBottom: '1rem'}}>COVIZ</Link>
-                <p className='desc' style={{marginLeft: '2rem', paddingTop: '1rem'}}>World COVID-19 Data Visualized</p>
+                <p className='desc' style={{marginLeft: '2rem', marginTop:'1.5rem', height: '0px'}}>World COVID-19 Data Visualized</p>
                 <ReactStyledTooltip id='home' place='bottom' effect='solid'><div>Home</div></ReactStyledTooltip>
                 <ul className='right navbar-nav'>
                     {listOfNavItems}
@@ -129,7 +129,7 @@ function Dropdown({ closeMenu, numberOfDropdownItems }) {
     const dropdownItems = [
         {id: 'contact', tooltipContent: 'Contact Us', icon: <MessengerIcon/>},
         {id: 'news', tooltipContent: 'News', icon:<BoltIcon/>},
-        {id: 'stats', tooltipContent: 'Statistics', icon:<ChartIcon/>},
+        {id: 'subscribe', tooltipContent: 'Subscribe', icon:<SubIcon/>},
         {id: 'settings', tooltipContent: 'Settings', icon: <CogIcon/>}
     ]
 

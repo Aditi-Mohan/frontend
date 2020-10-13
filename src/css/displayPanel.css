@@ -92,6 +92,16 @@ span {
     transition: all 100ms;
 }
 
+input {
+    border: none;
+    outline: none;
+}
+
+input:focus {
+    border-bottom: 1px solid #fae19b;
+    outline: none;
+}
+
 #search-box {
     text-align: center;
     color: #dadce1;
