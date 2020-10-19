@@ -5,7 +5,6 @@ import '../css/styles.css';
 import { ReactStyledTooltip } from '../components/StyledTooltip';
 import { ReactComponent as MessengerIcon } from '../svgs/icons/messenger.svg';
 import { ReactComponent as CaretIcon } from '../svgs/icons/caret.svg';
-import { ReactComponent as CogIcon } from '../svgs/icons/cog.svg';
 import { ReactComponent as ChevronIcon } from '../svgs/icons/chevron.svg';
 import { ReactComponent as BoltIcon } from '../svgs/icons/bolt.svg';
 import { ReactComponent as BellIcon } from '../svgs/icons/bell.svg';
@@ -36,7 +35,7 @@ class NavBar extends Component {
         }
         let navWidth = window.innerWidth - (14*2)
         let spaceForItems = navWidth - this.state.titleWidth - 100;
-        let numberOfNavItems = ~~(spaceForItems / this.state.liWidth) - 1 >= 0 ? ~~(spaceForItems / this.state.liWidth) - 1 : 0
+        let numberOfNavItems = ~~(spaceForItems / this.state.liWidth) - 2 >= 0 ? ~~(spaceForItems / this.state.liWidth) - 2 : 0
         this.state = {
             ...this.state,
             width: window.innerWidth,
@@ -59,7 +58,7 @@ class NavBar extends Component {
     updateDimensions() {
         let navWidth = window.innerWidth - (14*2)
         let spaceForItems = navWidth - this.state.titleWidth - 100;
-        let numberOfNavItems = ~~(spaceForItems / this.state.liWidth) - 1 >= 0 ? ~~(spaceForItems / this.state.liWidth) - 1 : 0;
+        let numberOfNavItems = ~~(spaceForItems / this.state.liWidth) - 2 >= 0 ? ~~(spaceForItems / this.state.liWidth) - 2 : 0;
         this.setState({
             ...this.state,
             width: window.innerWidth,
@@ -77,6 +76,9 @@ class NavBar extends Component {
             }
             else return null
         })
+        console.log(this.state.navItems);
+        console.log(this.state.numberOfNavItems)
+        console.log(this.state.navItems.length - this.state.numberOfNavItems);
         return(
             <nav className='my-navbar'>
                 <Link data-tip data-for='home' to='/' className='left brand-logo' style={{paddingLeft: '2rem', paddingBottom: '1rem'}}>COVIZ</Link>
@@ -84,7 +86,7 @@ class NavBar extends Component {
                 <ReactStyledTooltip id='home' place='bottom' effect='solid'><div>Home</div></ReactStyledTooltip>
                 <ul className='right navbar-nav'>
                     {listOfNavItems}
-                    {this.state.navItems.length - this.state.numberOfNavItems !== 0 && <NavItem id='quickAccess' tooltipContent='Quick Access' icon={<CaretIcon/>} >
+                    {this.state.navItems.length - this.state.numberOfNavItems > 0 && <NavItem id='quickAccess' tooltipContent='Quick Access' icon={<CaretIcon/>} >
                         <Dropdown numberOfDropdownItems={ this.state.navItems.length - this.state.numberOfNavItems }/>
                     </NavItem>}
                 </ul>
@@ -130,7 +132,7 @@ function Dropdown({ closeMenu, numberOfDropdownItems }) {
         {id: 'contact', tooltipContent: 'Contact Us', icon: <MessengerIcon/>},
         {id: 'news', tooltipContent: 'News', icon:<BoltIcon/>},
         {id: 'subscribe', tooltipContent: 'Subscribe', icon:<SubIcon/>},
-        {id: 'settings', tooltipContent: 'Settings', icon: <CogIcon/>}
+        {id: 'settings', tooltipContent: 'About Me', icon: <UserIcon/>}
     ]
 
     function claclHeight(el) {
