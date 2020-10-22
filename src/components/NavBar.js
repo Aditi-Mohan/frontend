@@ -1,5 +1,7 @@
 import React, {useState, Children, isValidElement, cloneElement, Component } from 'react';
 import { Link } from 'react-router-dom';
+import { animatedScroll as scroll } from 'react-scroll';
+import { Link as scrollLink } from 'react-scroll';
 import { CSSTransition } from 'react-transition-group';
 import '../css/styles.css';
 import { ReactStyledTooltip } from '../components/StyledTooltip';
@@ -21,6 +23,7 @@ class NavBar extends Component {
 
     constructor() {
         super();
+        console.log(window.location.pathname);
         this.state = {
             width: window.innerWidth,
             height: window.innerHeight,
@@ -31,11 +34,12 @@ class NavBar extends Component {
                 {id: 'news', tooltipContent: 'News', icon:<BoltIcon/>},
                 {id: 'subscribe', tooltipContent: 'Subscribe', icon: <SubIcon/>},
                 {id: 'settings', tooltipContent: 'About Me', icon: <UserIcon/>}
-            ]
+            ],
         }
         let navWidth = window.innerWidth - (14*2)
         let spaceForItems = navWidth - this.state.titleWidth - 100;
         let numberOfNavItems = ~~(spaceForItems / this.state.liWidth) - 2 >= 0 ? ~~(spaceForItems / this.state.liWidth) - 2 : 0
+        let scroll = window.location.pathname == '/';
         this.state = {
             ...this.state,
             width: window.innerWidth,
@@ -43,8 +47,10 @@ class NavBar extends Component {
             titleWidth: 140.91,
             liWidth: 64,
             numberOfNavItems,
+            scroll,
         }
-        this.updateDimensions = this.updateDimensions.bind(this)
+        this.updateDimensions = this.updateDimensions.bind(this);
+        this.setScroll = this.setScroll.bind(this);
     }
 
     componentDidMount() {
@@ -67,21 +73,27 @@ class NavBar extends Component {
         })
     }
 
+    setScroll(val) {
+        console.log('setting scroll to ', val);
+        this.setState({
+            scroll: val,
+        })
+    }
+
     render() {
         let counter = 1;
         const listOfNavItems = this.state.navItems.map((item) => {
             if(counter <= this.state.numberOfNavItems ) {
                 counter+= 1
-                return <NavItem to={'/'+item.id} id={item.id} tooltipContent={item.tooltipContent} icon={item.icon} key={counter}/>
+                return <NavItem scroll={this.state.scroll} setScroll={this.setScroll} to={'/'+item.id} id={item.id} tooltipContent={item.tooltipContent} icon={item.icon} key={counter}/>
             }
             else return null
         })
-        console.log(this.state.navItems);
-        console.log(this.state.numberOfNavItems)
-        console.log(this.state.navItems.length - this.state.numberOfNavItems);
         return(
             <nav className='my-navbar'>
-                <Link data-tip data-for='home' to='/' className='left brand-logo' style={{paddingLeft: '2rem', paddingBottom: '1rem'}}>COVIZ</Link>
+                <Link data-tip data-for='home' to='/' className='left brand-logo' 
+                style={{paddingLeft: '2rem', paddingBottom: '1rem'}}
+                onClick={() => this.setScroll(true)}>COVIZ</Link>
                 <p className='desc' style={{marginLeft: '2rem', marginTop:'1.5rem', height: '0px'}}>World COVID-19 Data Visualized</p>
                 <ReactStyledTooltip id='home' place='bottom' effect='solid'><div>Home</div></ReactStyledTooltip>
                 <ul className='right navbar-nav'>
@@ -113,9 +125,11 @@ function NavItem(props) {
     
     return(
         <li data-tip data-for={props.id} className='nav-item'>
-            <Link to={typeof props.to === 'undefined' ? '#!' : props.to} className='my-icon-button' onClick={() => setOpen(!open)}>
+            {props.scroll ? <scrollLink to='messages-section' smooth={true} className='my-icon-button' onClick={() => {setOpen(!open);}}>
                 {props.icon}
-            </Link>
+            </scrollLink> : <Link to={typeof props.to === 'undefined' ? '' : props.to} className='my-icon-button' onClick={() => {setOpen(!open); props.setScroll(false)}}>
+                {props.icon}
+            </Link>}
             {open && childrenWithProps}
             {(typeof props.tooltipContent !== 'undefined' && !open) && <ReactStyledTooltip id={props.id} place='bottom' effect='solid'>
             <div>{props.tooltipContent}</div>

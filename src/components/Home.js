@@ -77,7 +77,7 @@ class Home extends Component{
             updateDimensionsCallback={this.updateDimensionsCallback}
             clickCallback={this.clickCallback}/>
         <DisplayPanel dates={this.state.dateArray} width={this.state.displayWidth} country={this.state.countryName} height={this.state.displayHeight} searchFunction={this.searchCallback}/>
-        <Top5/>
+        {/* <Top5/> */}
         <TopNews/>
         <Messages searched={this.state.searched}/>
         </div>

@@ -8,7 +8,7 @@ class Messages extends Component {
 
     constructor() {
         super();
-        var remarks = this.getRemarks();
+        var remarks = [];
         this.state = {
             popup: false,
             remarks,
@@ -21,6 +21,7 @@ class Messages extends Component {
 
     componentDidMount() {
         window.addEventListener('resize', this.updateDimensions)
+        this.getRemarks();
     }
 
     componentWillUnmount() {
@@ -40,36 +41,74 @@ class Messages extends Component {
         });
     }
 
-    getRemarks() {
-        function importAll(r) {
-            let images = {};
-            r.keys().map((item, index) => { images[item.replace('./', '')] = r(item); return null;});
-            return images;
-          }
+    // getRemarks() {
+    //     function importAll(r) {
+    //         let images = {};
+    //         r.keys().map((item, index) => { images[item.replace('./', '')] = r(item); return null;});
+    //         return images;
+    //       }
           
-          const images = importAll(require.context('../images', false, /\.(png|jpe?g|svg)$/));
-          var remarks = [];
-          for(var i=0; i<3; i++){
-            var j=1;
-            var block = [];
-            for(var keys in images) {
-                if( j === 3) {
-                    block.push(<div key={Math.random()}><img width='300px' height='200px' src={images[keys]} alt={keys}></img></div>);
-                    remarks.push(block);
-                    j=1;
-                    block=[];
+    //       const images = importAll(require.context('../images', false, /\.(png|jpe?g|svg)$/));
+    //       var remarks = [];
+    //       for(var i=0; i<2; i++){
+    //         var j=1;
+    //         var block = [];
+    //         for(var keys in images) {
+    //             if( j === 3) {
+    //                 block.push(<div key={Math.random()}><img width='300px' height='200px' src={images[keys]} alt={keys}></img></div>);
+    //                 remarks.push(block);
+    //                 j=1;
+    //                 block=[];
+    //             }
+    //             else {
+    //                 block.push(<div key={Math.random()}><img width='300px' height='200px' src={images[keys]} alt={keys}></img></div>);
+    //                 j++;
+    //             }
+    //         }
+    //     }
+    //     fetch('api/messages/').then(async res => await res.json()).then(res => console.log(res));
+    //     return remarks;
+    // }
+
+    getRemarks() {
+        var messages = [];
+        var block = [];
+        fetch("api/messages/").then(res => res.json()).then(res => {
+            res.map((item, index) => {
+                var msg = <div key={index} style={{width: '300px', height: '200px'}} dangerouslySetInnerHTML={{__html: item.msg}}></div>
+                if(item.bg) {
+                    msg.props.style.backgroundColor = item.bg;
+                }
+                if(block.length === 3) {
+                    messages.push(block);
+                    block = [];
+                    block.push(msg);
                 }
                 else {
-                    block.push(<div key={Math.random()}><img width='300px' height='200px' src={images[keys]} alt={keys}></img></div>);
-                    j++;
+                    block.push(msg);
                 }
+            })
+            if(block.length != 0) {
+                messages.push(block);
             }
-        }
-        return remarks;
+        }).then(res => this.setState({remarks: messages}));
     }
 
     addRemark(newRemark, color) {
         var len = this.state.remarks.length;
+        var count = len != 0 ? ((len - 1) * 3) + this.state.remarks[len-1].length : 0;
+        console.log(typeof len);
+        fetch("api/messages/", {
+            method: 'POST',
+            body: JSON.stringify({
+                id: count+1,
+                msg: newRemark,
+                bg: color,
+            }),
+            headers: { 
+                "Content-type": "application/json;"
+            }
+        }).then(response => {console.log('posted'); return response.json()}).then(json => console.log(json));
         newRemark = <div key={Math.random()} style={{width: '300px', height: '200px'}} dangerouslySetInnerHTML={{__html: newRemark}}></div>
         if(color) {
             newRemark.props.style.backgroundColor = color;
@@ -91,7 +130,6 @@ class Messages extends Component {
                 remarks: [...this.state.remarks, [newRemark]],
             })
         }
-        //add to database
     }
 
     showPopUp() {
@@ -108,12 +146,12 @@ class Messages extends Component {
     render() {
         return(
             <div style={{height: '735px', marginLeft: 20, width: this.state.width - 47}}>
-                <h1 style={{fontSize:60}}>Leave a Message</h1>
+                <h1 style={{fontSize:60, whiteSpace: 'nowrap'}}>Leave a Message</h1>
                 {!this.state.popup && <div onClick={this.togglePopup} className='add-remark-btn' style={{marginTop: window.innerHeight*0.9 - 45, marginRight: window.innerWidth*0.03 + 20,}}>
                     <EditIcon/>
                     <h5 style={{marginTop: 4}}>Add</h5>
                 </div>}
-                <div style={{height: '605px', width: this.state.width - 57}}>
+                <div style={{height: '605px', width: this.state.remarks.length*305 >= this.state.width - 57 ? this.state.width - 57: this.state.remarks.length*305}}>
                     <HorizontalScroll reverseScroll={true}>
                         {this.state.remarks.map((item, index) => (
                             <div style={{width: '305px', height: '605px'}} key={index}>{item}</div>

@@ -330,12 +330,6 @@ function AutoComplete() {
     setWatchList([...watchList, newCountry]);
   }
 
-  const getuid = async () => {
-    var result;
-    await fetch("api/subscriber/").then(async res => await res.json()).then(res => result=res)
-    return result;
-  }
-
   const subscribe = async (e) => {
     function getRndInteger() {
       return Math.floor(Math.random() * (1000000 - 0 + 1) ) + 0;
