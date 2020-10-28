@@ -125,11 +125,9 @@ function NavItem(props) {
     
     return(
         <li data-tip data-for={props.id} className='nav-item'>
-            {props.scroll ? <scrollLink to='messages-section' smooth={true} className='my-icon-button' onClick={() => {setOpen(!open);}}>
+            <Link to={typeof props.to === 'undefined' ? '' : props.to} className='my-icon-button' onClick={() => {setOpen(!open); props.setScroll(false)}}>
                 {props.icon}
-            </scrollLink> : <Link to={typeof props.to === 'undefined' ? '' : props.to} className='my-icon-button' onClick={() => {setOpen(!open); props.setScroll(false)}}>
-                {props.icon}
-            </Link>}
+            </Link>
             {open && childrenWithProps}
             {(typeof props.tooltipContent !== 'undefined' && !open) && <ReactStyledTooltip id={props.id} place='bottom' effect='solid'>
             <div>{props.tooltipContent}</div>
